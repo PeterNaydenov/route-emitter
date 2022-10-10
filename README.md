@@ -1,6 +1,6 @@
  # Route-emitter (@peter.naydenov/route-emitter)
 
-Tool for building a **micro-frontend(MFE)**. Library `route-emitter` is based on [**react-router**](https://reactrouter.com/en/main) but is not a **'react' platform** dependant. Route change will trigger an event and will execute a callback function if it is defined.
+Tool for building a **micro-frontend(MFE)**. Library `route-emitter` is based on [**react-router**](https://reactrouter.com/en/main) but is not a **'react' platform** dependent. Route change will trigger an event and will execute a callback function if it is defined.
 
 ```js 
  let router = routeEmitter ([

@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
+  "repository": {
+      "type": "git",
+      "url" : "https://github.com/PeterNaydenov/route-emitter.git"
+    },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
