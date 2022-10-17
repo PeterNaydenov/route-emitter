@@ -14,6 +14,7 @@ import notice from '@peter.naydenov/notice'
 function routeEmitter (routes) {
   let 
         lastLocation = ''
+      , lastRoute = null
       , writeLastLocation = r => lastLocation = r
       , router = null
       , rt = []
@@ -29,26 +30,33 @@ function routeEmitter (routes) {
     } // setupRoutes func.
 
 
-
+  
   function subscribe ( router ) {
                 eBus.start ( '*' )
                 router.subscribe ( ({matches}) => {
-                                let { pathname:loc, params, route:{path, props } } = matches[0];
+                                lastRoute = matches[0]
+                                let { pathname:loc, params, route:{path, props } } = lastRoute;
                                 if ( !path )   return
-                                if ( loc !== lastLocation ) {
-                                            routes.forEach ( r => {
-                                                    if ( r.path === path ) {
-                                                                eBus.emit ( r.event, {
-                                                                                  pathname : loc
-                                                                                , path
-                                                                                , ...params
-                                                                          })
-                                                            }
-                                                  })
+                                if ( loc !== lastLocation )    {
+                                            emitEvent ( lastRoute)
                                             writeLastLocation ( loc )
                                     }
                       })
     } // subscribe func.
+
+
+  function emitEvent ( lastRoute ) {
+        const { pathname:loc, params, route:{path, props } } = lastRoute;
+        routes.forEach ( r => {
+                    if ( r.path === path ) {
+                                eBus.emit ( r.event, {
+                                                  pathname : loc
+                                                , path
+                                                , ...params
+                                          })
+                            }
+            })
+    } // repeat func.
 
 
 
@@ -158,15 +166,17 @@ function routeEmitter (routes) {
               , updateRoutes
               , setRoutes
               , getActiveRoutes
-              , navigate : (to,settings) => router.navigate ( to, settings )
-              , destroy  : () => {
-                                eBus.off ()
-                                return router = {
-                                                on : dead
-                                              , navigate : dead
-                                              , destroy : dead
-                                          }
-                            }
+              , getCurrent : () => lastRoute
+              , navigate   : (to,settings) => router.navigate ( to, settings )
+              , repeat     : () => emitEvent ( lastRoute )
+              , destroy    : () => {
+                                    eBus.off ()
+                                    return router = {
+                                                    on : dead
+                                                  , navigate : dead
+                                                  , destroy : dead
+                                              }
+                                }
       }
 }  // ReactEmmiter func.
 

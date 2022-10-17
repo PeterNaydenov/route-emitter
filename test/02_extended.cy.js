@@ -154,4 +154,35 @@ describe ( 'routeEmitter: Extended', () => {
             expect ( b ).to.be.equal ( 'more' )
         }) // it Use method setRoutes
 
+
+  
+  it ( 'Repeat route', () => {
+            let a = 0;
+            x.on ( 'afterChange', data =>  a = a + parseInt ( data.id )   )
+            x.setRoutes ([
+                              { path: '/user/:id', event: 'afterChange' },
+                              { path: '*', event: 'more' }
+                          ])
+            x.navigate ( '/user/44' )
+            x.repeat () // Method 'repeat' will trigger last event again with no change of the location
+            expect ( a ).to.be.equal ( 88 ) // Event 'afterChange' was triggered twice
+      }) // it Repeat route
+
+
+
+  it ( 'getCurrent', () => {
+            let a = 0;
+            x.on ( 'afterChange', data =>  a = a + parseInt ( data.id )   )
+            x.setRoutes ([
+                              { path: '/user/:id', event: 'afterChange' },
+                              { path: '*', event: 'more' }
+                          ])
+            x.navigate ( '/user/44' )
+            const r = x.getCurrent ()
+            expect ( r.route.path ).to.be.equal ( '/user/:id' )
+            expect ( r.params.id  ).to.be.equal ( '44' )
+            expect ( r.pathname   ).to.be.equal ( '/user/44' )
+      }) // it Repeat route
+  
+
 }) // describe

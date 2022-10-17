@@ -53,8 +53,10 @@ import routeEmitter from '@peter.naydenov/route-emitter'
  , updateRoutes : 'Change only existing paths. Will not add routes with new path'
  , removeRoutes : 'Exclude routes with specific paths'
  , getActiveRoutes : 'Returns a list of active route paths'
- , navigate  : 'Change location. Works as react-router navigate'
- , destroy   : 'Destroy the router'
+ , navigate   : 'Change location. Works as react-router navigate'
+ , repeat     : 'Emit the last route again'
+ , getCurrent : 'Returns last route object'
+ , destroy    : 'Destroy the router'
 ```
 
 
