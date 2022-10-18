@@ -168,7 +168,7 @@ function routeEmitter (routes) {
               , getActiveRoutes
               , getCurrent : () => lastRoute
               , navigate   : (to,settings) => router.navigate ( to, settings )
-              , repeat     : () => emitEvent ( lastRoute )
+              , repeat     : () => { if ( lastRoute )   emitEvent ( lastRoute ) }
               , destroy    : () => {
                                     eBus.off ()
                                     return router = {

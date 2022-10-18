@@ -170,6 +170,19 @@ describe ( 'routeEmitter: Extended', () => {
 
 
 
+  it ( 'Call "repeat" after init', () => {
+            let a = 0;
+            x.on ( 'afterChange', data =>  a = a + parseInt ( data.id )   )
+            x.setRoutes ([
+                              { path: '/user/:id', event: 'afterChange' },
+                              { path: '*', event: 'more' }
+                          ])
+            x.repeat () // If last route doesn't exist -> ignore the repeat
+            expect ( a ).to.be.equal ( 0 ) // Event 'afterChange' was triggered twice
+      }) // it Call "repeat" after init
+
+
+
   it ( 'getCurrent', () => {
             let a = 0;
             x.on ( 'afterChange', data =>  a = a + parseInt ( data.id )   )
