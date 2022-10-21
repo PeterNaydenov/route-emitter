@@ -161,6 +161,7 @@ function routeEmitter (routes) {
               , stop   : eBus.stop
               , start  : eBus.start
               , once   : eBus.once
+              , debug  : eBus.debug
               , addRoutes 
               , removeRoutes
               , updateRoutes
