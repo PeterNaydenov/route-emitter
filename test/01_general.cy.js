@@ -101,7 +101,7 @@ describe ( 'routeEmitter: General', () => {
 
 
     it ( 'Destroy the router', () => {
-            const 
+            let 
                 url = '/contact/Peter'
               , a = 0
               ;
