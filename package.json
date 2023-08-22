@@ -15,16 +15,16 @@
     "test": "npx cypress open --component --browser chrome"
   },
   "dependencies": {
-    "@peter.naydenov/notice": "^2.0.0",
+    "@peter.naydenov/notice": "^2.1.0",
     "@peter.naydenov/visual-controller-for-react": "^2.2.0",
-    "react-router-dom": "^6.14.1"
+    "react-router-dom": "^6.15.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "@vitejs/plugin-react": "^4.0.1",
-    "cypress": "^12.16.0",
-    "vite": "^4.3.9"
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.4",
+    "cypress": "^12.17.4",
+    "vite": "^4.4.9"
   },
   "keywords": [
     "micro",
