@@ -1,8 +1,5 @@
  # Route-emitter (@peter.naydenov/route-emitter)
 
-![version](https://img.shields.io/github/package-json/v/peterNaydenov/route-emitter)
-![license](https://img.shields.io/github/license/peterNaydenov/route-emitter)
-
 Tool for building a **micro-frontend(MFE)**. Library `route-emitter` is based on [**react-router**](https://reactrouter.com/en/main) but is not a **'react' platform** dependent. Route change will trigger an event and will execute a callback function if it is defined.
 
 ```js 
