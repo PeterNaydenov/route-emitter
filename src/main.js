@@ -3,172 +3,73 @@
  *    Route-emitter
  * 
  *    - Published for first time: October 10th, 2022
+ *    - Version 2: September 20th, 2023
  * 
  */
 
 import { createBrowserRouter } from 'react-router-dom'
 import notice from '@peter.naydenov/notice'
+import UrlPattern from 'url-pattern'
+
+
+import historyController from './historyController.js' // Browser window.history controller
+import methods from './methods/index.js'               // Library methods
 
 
 
-function routeEmitter (routes) {
-  let 
-        lastLocation = ''
-      , lastRoute = null
-      , writeLastLocation = r => lastLocation = r
-      , router = null
-      , rt = []
-      ;
+function routeEmitter ({ appName='App Name', addressList }) {
+  const 
+      eBus  = notice ()
+    , history = historyController ()
+    , state = {
+                  lastLocation : ''
+                , appName
+                , lastRoute : null
+                , rt : []      // Route list
+                , routes : {}  // Route definitions
+            }
+    , dependencies = { UrlPattern, eBus, history }
+    , API = {}
+    , inAPI = {}
+    ;
+    
+  history.listen ( (p,state) => eBus.emit ( p, state ))
 
-  const eBus = notice ();
+
+  Object.entries ( methods ).forEach ( ([name,fn]) => {
+                if ( name.startsWith ( '_' ) )   inAPI[name] = fn ( dependencies, state)
+                else                               API[name] = fn ( dependencies, state )
+      })
+  
+  addEventListener ( 'DOMContentLoaded', inAPI._locationChange )  // Listen for the initial page load.
+  addEventListener ( 'beforeunload', e => {
+                  e.preventDefault ()
+                  // TODO: Send a signal to app that the page is going to be unloaded
+                  sessionStorage.setItem ('_routeEmmiterLastLocation', window.location.pathname ) 
+                  return null
+        })
+  dependencies.inAPI = inAPI
+  inAPI._setupRoutes ( addressList )
+
     
 
-
-  function setupRouter (routes=[]) {
-                rt = routes.map ( r => ({ path : r.path })   )
-                return createBrowserRouter ( rt )
-    } // setupRoutes func.
-
-
-  
-  function subscribe ( router ) {
-                eBus.start ( '*' )
-                router.subscribe ( ({matches}) => {
-                                lastRoute = matches[0]
-                                let { pathname:loc, params, route:{path, props } } = lastRoute;
-                                if ( !path )   return
-                                if ( loc !== lastLocation )    {
-                                            emitEvent ( lastRoute)
-                                            writeLastLocation ( loc )
-                                    }
-                      })
-    } // subscribe func.
-
-
-  function emitEvent ( lastRoute ) {
-        const { pathname:loc, params, route:{path, props } } = lastRoute;
-        routes.forEach ( r => {
-                    if ( r.path === path ) {
-                                eBus.emit ( r.event, {
-                                                  pathname : loc
-                                                , path
-                                                , ...params
-                                          })
-                            }
-            })
-    } // repeat func.
-
-
-
-  function addRoutes ( newRoutes ) {
-              let updates = false;
-              
-              newRoutes.forEach ( newRoute => {
-                          const notDefinedRoute = rt.every ( r => r.path !== newRoute.path );
-                          if ( notDefinedRoute ) {
-                                  updates = true
-                                  routes.push ( newRoute )
-                             }
-                  }) // forEach route
-
-              if ( updates ) {
-                          router = setupRouter ( routes )
-                          subscribe ( router )
-                  }
-    } // addRoute func.
-
-
-
-  function updateRoutes ( updatedRoutes ) {
-              let updates = false;
-              updatedRoutes.forEach ( newRoute => {
-                          routes = routes.reduce ((res,r) => {
-                                            if ( r.path === newRoute.path ) {  
-                                                      res.push ( { ...newRoute })
-                                                      updates = true
-                                                }
-                                            else {
-                                                    res.push ( r )
-                                                }
-                                            return res
-                                      }, [] )
-                  }) // forEach route
-              if ( updates ) {
-                          router = setupRouter ( routes )
-                          subscribe ( router )
-                  }
-    } // updateRoutes func.
-
-
-
-  function setRoutes ( newRoutes ) {
-              newRoutes.forEach ( newRoute => {
-                          let updates = false;
-                          routes = routes.reduce ((res,r) => {
-                                            if ( r.path === newRoute.path ) {  
-                                                      res.push ( { ...newRoute })
-                                                      updates = true
-                                                }
-                                            else {
-                                                      res.push ( r )
-                                                }
-                                            return res
-                                      }, [] )
-                          if ( !updates )   routes.push ({...newRoute})
-                  }) // forEach route
-              router = setupRouter ( routes )
-              subscribe ( router )
-    } // setRoutes func.
-
-
-
-  function removeRoutes ( pathList=false ) {
-            let updates = false;
-            if ( !pathList ) {
-                     routes = []
-                     rt = []
-                     eBus.stop ( '*' )
-                     return
-                }
-            else {
-                    routes = routes.reduce ( (res, el) => {
-                                            if ( pathList.includes(el.path) ) {
-                                                      updates = true
-                                                      return res
-                                                }
-                                            res.push ( el )
-                                            return res
-                                      }, [])
-                }
-
-            if ( updates ) {
-                        router = setupRouter ( routes )
-                        subscribe ( router )
-                }
-    } // removeRoutes func.
-
-
-
   const dead = () => console.error ( 'Router was destroyed' );
-  const getActiveRoutes = () => rt.map ( r => r.path )
-  
-  router = setupRouter ( routes );
-  subscribe ( router )
-  
+    
   return {
                 on     : eBus.on
               , off    : eBus.off
               , stop   : eBus.stop
               , start  : eBus.start
               , once   : eBus.once
+              , emit   : eBus.emit
               , debug  : eBus.debug
-              , addRoutes 
-              , removeRoutes
-              , updateRoutes
-              , setRoutes
-              , getActiveRoutes
+              // , addAddress
+              // , removeAddress
+              // , updateRoutes
+              // , setRoutes
+              , listActiveRoutes : () => state.rt.map ( r => `${r.name} ---> ${r.path}`)
               , getCurrent : () => lastRoute
-              , navigate   : (to,settings) => router.navigate ( to, settings )
+              , ...API
               , repeat     : () => { if ( lastRoute )   emitEvent ( lastRoute ) }
               , destroy    : () => {
                                     eBus.off ()
@@ -186,3 +87,51 @@ function routeEmitter (routes) {
 export default routeEmitter
 
 
+const list = [
+  {
+      path : '/'
+    , name : 'home'
+    , title : 'Home Page'
+    , inHistory : true
+  }
+  , {
+      path: '/about'
+    , name: 'about'
+    , title : 'About Page'
+    , inHistory : true
+  }
+]
+
+
+const router = routeEmitter ({ addressList:list });
+router.on ( 'home', state => {
+                                console.log ( 'HOME' )
+                                console.log ( state ) 
+      })
+router.on ( 'about', state => {
+                                console.log ( 'ABOUT' )
+                                console.log ( state ) 
+      })
+// router.getActiveRoutes ();
+
+addEventListener ( 'beforeunload', event => {
+              event.preventDefault()
+              console.log ( window.location.pathname )
+              return null
+      })
+
+
+
+// const home = new UrlPattern ( '/:page' )
+const about = new UrlPattern ( '/:page(/:user/)' )
+try {
+//  let x = about.stringify({page:'info'}) 
+  // router.navigate ( 'home' )
+  // router.navigate ( 'about' )
+  // console.log ( x )
+} catch ( err ) {
+    console.error ( `Missing data. \n ${err} `)
+}
+
+
+//  console.log ( x )

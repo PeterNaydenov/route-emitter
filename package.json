@@ -16,7 +16,7 @@
     "test": "npx cypress open --component --browser chrome"
   },
   "dependencies": {
-    "@peter.naydenov/notice": "^2.1.0",
+    "@peter.naydenov/notice": "^2.2.0",
     "@peter.naydenov/visual-controller-for-react": "^2.2.0",
     "react-router-dom": "^6.16.0",
     "url-pattern": "^1.0.3"
