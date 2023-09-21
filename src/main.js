@@ -7,22 +7,26 @@
  * 
  */
 
-import { createBrowserRouter } from 'react-router-dom'
-import notice from '@peter.naydenov/notice'
-import UrlPattern from 'url-pattern'
-
+import notice from '@peter.naydenov/notice'   // Docs: https://github.com/PeterNaydenov/notice
+import UrlPattern from 'url-pattern'          // Docs: https://github.com/snd/url-pattern
 
 import historyController from './historyController.js' // Browser window.history controller
 import methods from './methods/index.js'               // Library methods
 
 
 
-function routeEmitter ({ appName='App Name', addressList }) {
+function routeEmitter ({ 
+                    appName ='App Name'     // Used as a title for addresses without title property
+                  , addressList = []        // List of predefined addresses
+                  , addressDefault='home'   // Default address name
+                  , addressError='error'    // Error address name
+                }) {
   const 
       eBus  = notice ()
     , history = historyController ()
     , state = {
                   lastLocation : ''
+                , SSName : '_routeEmmiterLastLocation' // Session Storage(SS) item name
                 , appName
                 , lastRoute : null
                 , rt : []      // Route list
@@ -45,15 +49,22 @@ function routeEmitter ({ appName='App Name', addressList }) {
   addEventListener ( 'beforeunload', e => {
                   e.preventDefault ()
                   // TODO: Send a signal to app that the page is going to be unloaded
-                  sessionStorage.setItem ('_routeEmmiterLastLocation', window.location.pathname ) 
+                  sessionStorage.setItem ( state.SSName, window.location.pathname ) 
                   return null
         })
   dependencies.inAPI = inAPI
   inAPI._setupRoutes ( addressList )
+  // TODO: Check if home and error addresses are in the list
+  // TODO: Check also for path '/'.
 
     
 
   const dead = () => console.error ( 'Router was destroyed' );
+
+  // Available system events:
+  // _REFRESH: When the page is reloaded
+  // _ERROR: When an error occurs
+
     
   return {
                 on     : eBus.on
@@ -73,6 +84,7 @@ function routeEmitter ({ appName='App Name', addressList }) {
               , repeat     : () => { if ( lastRoute )   emitEvent ( lastRoute ) }
               , destroy    : () => {
                                     eBus.off ()
+                                    // TODO: Stop all browser event listeners
                                     return router = {
                                                     on : dead
                                                   , navigate : dead
@@ -85,6 +97,17 @@ function routeEmitter ({ appName='App Name', addressList }) {
 
 
 export default routeEmitter
+
+
+
+
+
+
+
+
+
+
+
 
 
 const list = [

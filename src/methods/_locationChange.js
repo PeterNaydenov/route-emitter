@@ -3,11 +3,11 @@ const { history, eBus } = dependencies;
 return function _locationChange () {
                                 let reload = false;
                                 const 
-                                      lastLocation = sessionStorage.getItem ('_routeEmmiterLastLocation' )
+                                      lastLocation = sessionStorage.getItem ( state.SSName )
                                     , url = window.location.pathname
                                     ;
                                 if ( lastLocation && lastLocation === window.location.pathname )   reload = true
-                                state.rt.every ( ({ name, pattern, title }) => { // Search an address name
+                                let missingURL = state.rt.every ( ({ name, pattern, title }) => {   // Search for address name
                                                     let res = pattern.match ( url );
                                                     if ( res ) {
                                                                 if ( reload ) { 
@@ -21,6 +21,10 @@ return function _locationChange () {
                                                         }
                                                     return true
                                             })
+                                if ( missingURL ) {   // URL is not defined in the address list
+                                            eBus.emit ( '_ERROR', { code: 404, message: `Path "${url}" is not registered` })
+                                            return 
+                                    }
                                 state.lastRoute = url
 }} // _locationChange func.
 

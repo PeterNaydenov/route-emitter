@@ -1,9 +1,10 @@
 function navigate ( dependencies, state ) {
-const { history } = dependencies;
+const { history, eBus } = dependencies;
 return function navigate ( addressName, data={} ) {
 
     if ( !state.routes[addressName] ) {  // If address is not registered
                 console.error ( `Address "${addressName}" is not registered` )
+                eBus.emit ( '_ERROR', { code: 404, message: `Address "${addressName}" is not registered` })
                 return  
         }
 
