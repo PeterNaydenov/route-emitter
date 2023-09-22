@@ -22,7 +22,7 @@ return function _locationChange () {
                                                     return true
                                             })
                                 if ( missingURL ) {   // URL is not defined in the address list
-                                            eBus.emit ( '_ERROR', { code: 404, message: `Path "${url}" is not registered` })
+                                            eBus.emit ( '_ERROR', { code: 404, message: `There is no defined address for path "${url}".` })
                                             return 
                                     }
                                 state.lastRoute = url
