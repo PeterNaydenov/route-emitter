@@ -28,6 +28,8 @@ function routeEmitter ({
                   lastLocation : ''
                 , SSName : '_routeEmmiterLastLocation' // Session Storage(SS) item name
                 , appName
+                , addressDefault : 'home'
+                , addressError  : 'error'
                 , lastRoute : null
                 , rt : []      // Route list
                 , routes : {}  // Route definitions
@@ -67,17 +69,26 @@ function routeEmitter ({
 
     
   return {
-                on     : eBus.on
+                run     : () => { // start the router
+                  // Check if  all settings are correct and then start the router
+
+                } 
+              , setConfig : ({ appName, addressDefault, addressError }) => {
+
+                } //
+              // Event related methods
+              ,  on     : eBus.on
               , off    : eBus.off
               , stop   : eBus.stop
               , start  : eBus.start
               , once   : eBus.once
-              , emit   : eBus.emit
               , debug  : eBus.debug
-              // , addAddress
-              // , removeAddress
-              // , updateRoutes
-              // , setRoutes
+
+              // Routes related methods
+              // , setAddresses
+              // , addAddresses
+              // , removeAddresses
+              // , updateAddresses
               , listActiveRoutes : () => state.rt.map ( r => `${r.name} ---> ${r.path}`)
               , getCurrent : () => lastRoute
               , ...API

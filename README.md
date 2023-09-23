@@ -23,6 +23,7 @@ const address = {
 ```
 
 
+
 ## Instalation
 Install for node.js projects by writing in your terminal:
 
@@ -38,6 +39,33 @@ import routeEmitter from '@peter.naydenov/route-emitter'
 
 
 ## How to use it
+
+Router is coming with a default configuration. What is coming with the default configuration?
+- Single addresses: `home`(path: '/');
+- Application title is set to 'App title';
+- Default address is set to 'home';
+
+Before `run` the router, make sure that you have set a list of `application addresses`, and the application title. '**App title**' is used only if some of addresses don't have title. Make sure also to listen for system event '_ERROR'. Router will not do anything without your command.
+
+
+
+```js
+// create the router instance:
+const router = routeEmmiter ()
+// set application title & addresses:
+router.setConfig({ appTitle: 'My App'}).setAddresses ( addressList )
+// listen for system event '_ERROR'
+router.on ( '_ERROR', (name, data) => console.log ( `Error: ${data}`)   )
+// run the router
+router.run ()
+```
+
+- If URL is not recognized, the router will navigate to 'home';
+- Error address is set to 'error';
+To 'run' the router, you need to set a list of addresses and configuration options. Here is the list
+- Expected at least two addresses - home and error.
+- Expected one of the addresses to contain path '/'. 
+
 
 ```js 
  let router = routeEmitter ([
@@ -82,8 +110,8 @@ router.on ( '*', (name, data) => {
  , stop  : 'Ignore event for a while'
  , start : 'Reactivate ignored event'
  , debug : 'Returns a console message on each triggered event'
- , setRoutes    : 'Will overwrite existing and will add the new paths to the routing table'
- , addRoutes    : 'Add a new routes to existing routes. Already defined paths whould be ignored'
+ , setAddresses  : 'Will remove existing and will set the new addresses'
+ , addRoutes     : 'Add a new routes to existing routes. Already defined paths whould be ignored'
  , updateRoutes : 'Change only existing paths. Will not add routes with new path'
  , removeRoutes : 'Exclude routes with specific paths'
  , listActiveRoutes : 'Returns a list of active addresses: address name -> address path'
