@@ -7,6 +7,8 @@
 
 Provide an list of "**application addresses**"(in brief: *'address list'*) and `router-emitter` will control changing of the URL, page titles and browser history records. Router recognizes the `application addresses` and will trigger an event with the name of the address. Calling the router `navigate` method with `address name` and data will generate and change the URL, will change page title and will set a browser history record if needed.
 
+
+
 ## Application Address Definition
 
 ```js
