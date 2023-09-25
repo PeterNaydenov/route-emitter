@@ -5,7 +5,18 @@
 
 
 
-Provide an list of "**application addresses**"(in brief: *'address list'*) and `router-emitter` will control changing of the URL, page titles and browser history records. Router recognizes the `application addresses` and will trigger an event with the name of the address. Calling the router `navigate` method with `address name` and data will generate and change the URL, will change page title and will set a browser history record if needed.
+Provide an list of "**application addresses**"(in brief: *'address list'*) and `route-emitter` can take control over change of the URL, page titles and browser history records. 
+
+
+## What route-emitter can do?
+- Router emits event on each external change of the URL. Event names are `_CHANGE`, `_REFRESH`, and `_ERROR`;
+- On changing url, `route-emitter` will trigger an event `_CHANGE` with the name of the address and object with collected parameters;
+- Application can change the URL by calling the router `navigate` method with `address name` and data. `route-emitter` will generate and change the URL, will change page title and will set a browser history record if needed. 
+- Calling method `navigate` will **NOT** trigger the event `_CHANGE`(prevents infinite loop);
+- Router don't have any route logic build in. Everything is programmable from outside;
+- If url is not recognized, router will send event `_ERROR` with the url to the application logic;
+- Event `_REFRESH` means that requested url is the same as the current url. As the event `_CHANGE`, will deliver the name of the address and collected parameters;
+- Calling navigate with address and wrong set of data will trigger event `_ERROR` with the name of the address and collected parameters;
 
 
 
@@ -106,7 +117,9 @@ router.on ( '*', (name, data) => {
 ## Route-emitter Methods
 ```js
 // Router Methods
-   on    : 'Register a callback function for event'
+   run : 'Start the router'
+ , setConfig : 'Set some configuration options' 
+ , on    : 'Register a callback function for event'
  , once  : 'Register a single execution callback for event'
  , off   : 'Removes event from subscribtion'
  , stop  : 'Ignore event for a while'

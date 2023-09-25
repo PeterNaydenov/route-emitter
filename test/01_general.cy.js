@@ -3,27 +3,32 @@ import routeEmitter from '/src/main'
 
 describe ( 'routeEmitter: General', () => {
   
-  let x;
+  // let x;
 
 
-  before ( () => {
-          const routes = [
-                            {
-                                path : '/about/:id'
-                              , event : 'myPage'
-                            },
-                            {
-                                path  : '/contact/:name'
-                              , event : 'contact'
-                            },
-                            {
-                                path  : '*'
-                              , event : 'default'
-                            }
-                        ]
-          x = routeEmitter (routes)
-      }) // before 
+  // before ( () => {
+  //         // const routes = [
+  //         //                   {
+  //         //                       path : '/about/:id'
+  //         //                     , event : 'myPage'
+  //         //                   },
+  //         //                   {
+  //         //                       path  : '/contact/:name'
+  //         //                     , event : 'contact'
+  //         //                   },
+  //         //                   {
+  //         //                       path  : '*'
+  //         //                     , event : 'default'
+  //         //                   }
+  //         //               ]
+  //         // x = routeEmitter (routes)
+  //     }) // before 
 
+
+
+  it.only ( 'test', () => {
+              console.log ( 'TEST' )
+    }) // it test
 
 
   it( 'RouteEmmiter structure', () => {          

@@ -3,7 +3,7 @@
  *    Route-emitter
  * 
  *    - Published for first time: October 10th, 2022
- *    - Version 2: September 20th, 2023
+ *    - Version 2: September 26th, 2023
  * 
  */
 
@@ -15,73 +15,59 @@ import methods from './methods/index.js'               // Library methods
 
 
 
-function routeEmitter ({ 
-                    appName ='App Name'     // Used as a title for addresses without title property
-                  , addressList = []        // List of predefined addresses
-                  , addressDefault='home'   // Default address name
-                  , addressError='error'    // Error address name
-                }) {
+function routeEmitter ( config ) {
   const 
       eBus  = notice ()
     , history = historyController ()
+    , { appName, sessionStorageKey } = config || {}
     , state = {
-                  lastLocation : ''
-                , SSName : '_routeEmmiterLastLocation' // Session Storage(SS) item name
-                , appName
-                , addressDefault : 'home'
-                , addressError  : 'error'
-                , lastRoute : null
-                , rt : []      // Route list
-                , routes : {}  // Route definitions
+                  lastLocation : ''   // Last url
+                , lastAddress : null  // Last address name
+                , SSName : '_routeEmmiterLastLocation' // Session Storage(SS) key for last location
+                , appName : 'App Name' // Used as a title for addresses without title property
+                , rt : []      // Addresses as a list
+                , routes : {}  // Addresses definitions
             }
     , dependencies = { UrlPattern, eBus, history }
-    , API = {}
+    , APImethods = {}
     , inAPI = {}
+    , dead = () => console.error ( 'Router was destroyed' );
     ;
     
-  history.listen ( (p,state) => eBus.emit ( p, state ))
-
+  if ( appName           && ( typeof appName === 'string'           ))   state.appName = appName
+  if ( sessionStorageKey && ( typeof sessionStorageKey === 'string' ))   state.SSName = sessionStorageKey  
 
   Object.entries ( methods ).forEach ( ([name,fn]) => {
-                if ( name.startsWith ( '_' ) )   inAPI[name] = fn ( dependencies, state)
-                else                               API[name] = fn ( dependencies, state )
+                if ( name.startsWith ( '_' ) )   inAPI[name]      = fn ( dependencies, state )
+                else                             APImethods[name] = fn ( dependencies, state )
       })
+  dependencies.inAPI = inAPI
   
+  history.listen ( ( addressName, data, url ) => {   // Start listening for pop-state events
+                if ( state.lastLocation === url )   eBus.emit ( '_REFRESH', addressName, data, url )
+                else                                eBus.emit ( '_CHANGE', addressName, data, url  )
+      })   
   addEventListener ( 'DOMContentLoaded', inAPI._locationChange )  // Listen for the initial page load.
   addEventListener ( 'beforeunload', e => {
                   e.preventDefault ()
-                  // TODO: Send a signal to app that the page is going to be unloaded
                   sessionStorage.setItem ( state.SSName, window.location.pathname ) 
+                  confirm ( 'Are you sure you want to leave?' )
                   return null
         })
-  dependencies.inAPI = inAPI
-  inAPI._setupRoutes ( addressList )
-  // TODO: Check if home and error addresses are in the list
-  // TODO: Check also for path '/'.
 
-    
+  
 
-  const dead = () => console.error ( 'Router was destroyed' );
-
-  // Available system events:
-  // _REFRESH: When the page is reloaded
-  // _ERROR: When an error occurs
-
-    
-  return {
+  
+  
+  dependencies.API = {
                 run     : () => { // start the router
-                  // Check if  all settings are correct and then start the router
-
+                                  // Check if  all settings are correct and then start the router
                 } 
-              , setConfig : ({ appName, addressDefault, addressError }) => {
 
-                } //
               // Event related methods
-              ,  on     : eBus.on
-              , off    : eBus.off
-              , stop   : eBus.stop
-              , start  : eBus.start
-              , once   : eBus.once
+              , onChange  : fn => { eBus.on ( '_CHANGE',  fn ); return dependencies.API }
+              , onError   : fn => { eBus.on ( '_ERROR',   fn ); return dependencies.API }
+              , onRefresh : fn => { eBus.on ( '_REFRESH', fn ); return dependencies.API }
               , debug  : eBus.debug
 
               // Routes related methods
@@ -89,9 +75,10 @@ function routeEmitter ({
               // , addAddresses
               // , removeAddresses
               // , updateAddresses
-              , listActiveRoutes : () => state.rt.map ( r => `${r.name} ---> ${r.path}`)
+              , listActiveRoutes    : () => state.rt.map ( r => `${r.name} ---> ${r.path}`)
+              , listActiveAddresses : () => state.rt.map ( r => r.name )
               , getCurrent : () => lastRoute
-              , ...API
+              , ...APImethods
               , repeat     : () => { if ( lastRoute )   emitEvent ( lastRoute ) }
               , destroy    : () => {
                                     eBus.off ()
@@ -103,6 +90,7 @@ function routeEmitter ({
                                               }
                                 }
       }
+  return dependencies.API
 }  // ReactEmmiter func.
 
 
@@ -110,62 +98,3 @@ function routeEmitter ({
 export default routeEmitter
 
 
-
-
-
-
-
-
-
-
-
-
-
-const list = [
-  {
-      path : '/'
-    , name : 'home'
-    , title : 'Home Page'
-    , inHistory : true
-  }
-  , {
-      path: '/about'
-    , name: 'about'
-    , title : 'About Page'
-    , inHistory : true
-  }
-]
-
-
-const router = routeEmitter ({ addressList:list });
-router.on ( 'home', state => {
-                                console.log ( 'HOME' )
-                                console.log ( state ) 
-      })
-router.on ( 'about', state => {
-                                console.log ( 'ABOUT' )
-                                console.log ( state ) 
-      })
-// router.getActiveRoutes ();
-
-addEventListener ( 'beforeunload', event => {
-              event.preventDefault()
-              console.log ( window.location.pathname )
-              return null
-      })
-
-
-
-// const home = new UrlPattern ( '/:page' )
-const about = new UrlPattern ( '/:page(/:user/)' )
-try {
-//  let x = about.stringify({page:'info'}) 
-  // router.navigate ( 'home' )
-  // router.navigate ( 'about' )
-  // console.log ( x )
-} catch ( err ) {
-    console.error ( `Missing data. \n ${err} `)
-}
-
-
-//  console.log ( x )

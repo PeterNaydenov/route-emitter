@@ -2,13 +2,11 @@
 /**
  *   Browser window.history controller
  */
-function historyController ( dependencies ) {
+function historyController ( ) {
 
 
 
     function write ({state, title, url},  overwriteFlag ) {
-            console.log ( 'historyController.write' )
-            console.log ( overwriteFlag )
             if ( overwriteFlag )  window.history.pushState    ( state, title, url )
             else                  window.history.replaceState ( state, title, url )
             document.title = title
@@ -17,17 +15,15 @@ function historyController ( dependencies ) {
         
 
     function read () {
-                return window.location.pathname.substring(1);
+                return window.location.pathname;
         } // readLocation func.
     
 
 
     function listen ( fn ) {
             window.onpopstate = function ( event ) {
-                                                console.log ( 'pop-state event' )
-                                                console.log ( window.location.pathname )
-                                                let page = event.state.page;
-                                                fn ( page, event.state )
+                                                let { PGID, url, data } = event.state.PGID;
+                                                fn ( PGID, data, url )
                                         }
         } // listen func.
 
