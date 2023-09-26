@@ -13,7 +13,9 @@ return function _locationChange () {
             missingURL = state.rt.every ( ({ name, pattern, title }) => {   // Search for address name
                                 let res = pattern.match ( url );
                                 if ( res ) {
+                                            const isFn = typeof title === 'function'
                                             sessionStorage.setItem ( state.SSName, url )
+                                            document.title = isFn ? title ( res ) : title
                                             if ( reload )    eBus.emit ( '_REFRESH', name, res, url )
                                             else             eBus.emit ( '_CHANGE',  name, res, url )
                                             return false   // Prevents duplicated data in the browser.history

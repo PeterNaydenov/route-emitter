@@ -2,6 +2,7 @@ import _historyActions    from "./_historyActions.js"
 import _locationChange    from "./_locationChange.js"
 import _setAddressRecord  from "./_setAddressRecord.js"  
 
+import destroy            from "./destroy.js"
 import listAciveAddresses from "./listActiveAddresses.js"
 import listActiveRoutes   from "./listActiveRoutes.js"
 import navigate           from "./navigate.js"
@@ -17,6 +18,7 @@ export default {
                 , _setAddressRecord       // Individual address record preparation
 
                 // API methods
+                , destroy
                 , listAciveAddresses
                 , listActiveRoutes
                 , navigate

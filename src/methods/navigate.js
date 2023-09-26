@@ -20,6 +20,8 @@ return function navigate ( addressName, data={} ) {
     try {
                 const url = pattern.stringify ( data );
                 if ( url === lastLocation )   return   // If same path, do nothing
+                const isFn = (typeof title === 'function');
+                document.title = isFn ? title ( data ) : title
                 history.write ({ 
                                   state : { PGID: addressName, url, data }
                                 , url
@@ -27,8 +29,6 @@ return function navigate ( addressName, data={} ) {
                 state.lastLocation = url
                 sessionStorage.setItem ( state.SSName, url )
                 state.lastAddress  = addressName
-                const isFn = (typeof title === 'function');
-                document.title = isFn ? title ( data ) : title
         } 
     catch ( err ) {
                 eBus.emit ( '_ERROR', { code: 400, message: `Data provided for address "${addressName}" is not correct. ${err}` })

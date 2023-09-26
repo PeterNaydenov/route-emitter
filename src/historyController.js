@@ -38,6 +38,9 @@ function historyController ( ) {
     return {
               write
             , read
+            , back : (steps=1) => window.history.go ( parseInt(`-${steps}`)   )
+            , go   : (steps=1) => window.history.go ( steps )
+
             , listen
             , destroy
         }
