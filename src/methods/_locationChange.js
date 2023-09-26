@@ -1,25 +1,19 @@
 function _locationChange ( dependencies, state ) {
-const { eBus } = dependencies;
+const { eBus, history } = dependencies;
 return function _locationChange () {
             let 
                   reload = false
                 , missingURL = true
                 ;
-                console.log ( 'hamam' )
             const 
                   lastLocation = sessionStorage.getItem ( state.SSName )
-                , url = window.location.pathname
+                , url = history.read ()
                 ;
-                // console.log ( '_locationChange' )
-                // console.log ( url )
-                // console.log ( lastLocation )
-                // console.log ( lastLocation === url ? 'reload' : 'change' )
-            if ( lastLocation && lastLocation === window.location.pathname )   reload = true
-            console.log ( state.rt )
+            if ( lastLocation && lastLocation === url )   reload = true
             missingURL = state.rt.every ( ({ name, pattern, title }) => {   // Search for address name
                                 let res = pattern.match ( url );
-                                
                                 if ( res ) {
+                                            sessionStorage.setItem ( state.SSName, url )
                                             if ( reload )    eBus.emit ( '_REFRESH', name, res, url )
                                             else             eBus.emit ( '_CHANGE',  name, res, url )
                                             return false   // Prevents duplicated data in the browser.history

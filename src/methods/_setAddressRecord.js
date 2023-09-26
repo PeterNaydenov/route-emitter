@@ -1,5 +1,5 @@
-function _setRoute ( dependencies, state ) {
-return function _setRoute ({name, path, title, inHistory }) {
+function _setAddressRecord ( dependencies, state ) {
+return function _setAddressRecord ({name, path, title, inHistory }) {
     
     if ( name == null      )   return null
     if ( path == null      )   return null
@@ -11,10 +11,10 @@ return function _setRoute ({name, path, title, inHistory }) {
         , pattern = new UrlPattern ( path )
         ;
     return { name, path, title, inHistory, pattern }
-}} // setRoute func.
+}} // _setAddressRecord func.
 
 
 
-export default _setRoute
+export default _setAddressRecord
 
 

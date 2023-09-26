@@ -2,7 +2,10 @@ function navigate ( dependencies, state ) {
 const { history, eBus } = dependencies;
 return function navigate ( addressName, data={} ) {
     
-    if ( !state.isActive )   return
+    if ( !state.isActive ) {  
+                console.error ( 'Router is not active. Use router.run() to activate it.' )
+                return
+        }
     const { lastAddress, lastLocation, routes } = state;
     if ( !routes[addressName] ) {  // If address is not registered
                 console.error ( `Address "${addressName}" is not registered` )
@@ -22,6 +25,7 @@ return function navigate ( addressName, data={} ) {
                                 , url
                             }, oldHistoryFlag ) 
                 state.lastLocation = url
+                sessionStorage.setItem ( state.SSName, url )
                 state.lastAddress  = addressName
                 const isFn = (typeof title === 'function');
                 document.title = isFn ? title ( data ) : title

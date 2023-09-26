@@ -1,7 +1,6 @@
-import _beforeUnload      from "./_beforeUnload.js"
 import _historyActions    from "./_historyActions.js"
 import _locationChange    from "./_locationChange.js"
-import _setRoute          from "./_setRoute.js"  
+import _setAddressRecord  from "./_setAddressRecord.js"  
 
 import listAciveAddresses from "./listActiveAddresses.js"
 import listActiveRoutes   from "./listActiveRoutes.js"
@@ -13,16 +12,15 @@ import run                from "./run.js"
 
 export default {
                 // inAPI methods
-                  _beforeUnload
-                , _historyActions
-                , _setRoute       // Individual route preparation
+                  _historyActions
                 , _locationChange
+                , _setAddressRecord       // Individual address record preparation
 
                 // API methods
                 , listAciveAddresses
                 , listActiveRoutes
                 , navigate
-                , setAddresses
                 , removeAddresses
                 , run
+                , setAddresses
             }

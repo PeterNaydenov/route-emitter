@@ -1,15 +1,15 @@
 'use strict'
 function setAddresses ( dependencies, state ) {
 return function setAddresses ( list, cancelList=[] ) {
-     const { _setRoute } = dependencies.inAPI;
+     const { _setAddressRecord } = dependencies.inAPI;
      list.forEach ( route => {
-                const routeRecord = _setRoute(route);
-                if ( !routeRecord )   return
-                if ( cancelList.includes ( routeRecord.name ) )   return
+                const addressRecord = _setAddressRecord ( route );
+                if ( !addressRecord )   return
+                if ( cancelList.includes ( addressRecord.name ) )   return
 
-                const name = routeRecord.name;
-                state.rt.push ( routeRecord )
-                state.routes[name] = routeRecord
+                const name = addressRecord.name;
+                state.rt.push ( addressRecord )
+                state.routes[name] = addressRecord
         })
       return dependencies.API
 }} // setAddresses func.
