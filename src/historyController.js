@@ -30,7 +30,7 @@ function historyController ( ) {
     
     
     function destroy () {
-                            window.onpopstate = null            
+            window.onpopstate = null            
         } // destroy func.
 
 

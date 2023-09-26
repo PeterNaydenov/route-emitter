@@ -1,6 +1,8 @@
 function navigate ( dependencies, state ) {
 const { history, eBus } = dependencies;
 return function navigate ( addressName, data={} ) {
+    
+    if ( !state.isActive )   return
     const { lastAddress, lastLocation, routes } = state;
     if ( !routes[addressName] ) {  // If address is not registered
                 console.error ( `Address "${addressName}" is not registered` )
@@ -16,7 +18,7 @@ return function navigate ( addressName, data={} ) {
                 const url = pattern.stringify ( data );
                 if ( url === lastLocation )   return   // If same path, do nothing
                 history.write ({ 
-                                  state : { PGID: addressName, url, data } // TODO: Think about state...
+                                  state : { PGID: addressName, url, data }
                                 , url
                             }, oldHistoryFlag ) 
                 state.lastLocation = url
