@@ -3,7 +3,7 @@
  *    Route-emitter
  * 
  *    - Published for first time: October 10th, 2022
- *    - Version 2: September 26th, 2023
+ *    - Version 2: September 28th, 2023
  * 
  */
 

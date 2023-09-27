@@ -1,8 +1,14 @@
 function _historyActions ( dependencies, state ) {
-const { eBus } = dependencies;
-return function _historyActions ( addressName, data, url ) {
-            if ( state.lastLocation === url )   eBus.emit ( '_REFRESH', addressName, data, url )
-            else                                eBus.emit ( '_CHANGE', addressName, data, url  )
+
+return function _historyActions ( task, {addressName, data, url}) {
+            const 
+                  { eBus, API } = dependencies
+                , lastLocation  = state.lastLocation
+                ;
+            API.navigate ( addressName, data )  
+            if ( lastLocation === url )   eBus.emit ( '_REFRESH', addressName, data, url )
+            else                          eBus.emit ( '_CHANGE' , addressName, data, url )
+            task.done ( addressName, data )
 }} // _historyActions func.
 
 

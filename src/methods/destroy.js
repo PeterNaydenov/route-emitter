@@ -1,6 +1,6 @@
 function destroy ( dependencies, state ) {
-const { eBus, history } = dependencies;
 return function destroy () {
+        const { eBus, history, inAPI, dead } = dependencies;
         state.isActive = false
         eBus.off ()
         history.destroy ()

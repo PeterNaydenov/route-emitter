@@ -1,7 +1,6 @@
 function navigate ( dependencies, state ) {
 const { history, eBus } = dependencies;
 return function navigate ( addressName, data={} ) {
-    
     if ( !state.isActive ) {  
                 console.error ( 'Router is not active. Use router.run() to activate it.' )
                 return
@@ -15,16 +14,14 @@ return function navigate ( addressName, data={} ) {
 
     let oldHistoryFlag = false;   // False means replaceState, true means pushState
     const { pattern, title } = routes[addressName];
-
     if ( lastAddress )   oldHistoryFlag = state.routes[ lastAddress ].inHistory
     try {
                 const url = pattern.stringify ( data );
                 if ( url === lastLocation )   return   // If same path, do nothing
-                const isFn = (typeof title === 'function');
-                document.title = isFn ? title ( data ) : title
                 history.write ({ 
                                   state : { PGID: addressName, url, data }
                                 , url
+                                , title
                             }, oldHistoryFlag ) 
                 state.lastLocation = url
                 sessionStorage.setItem ( state.SSName, url )
