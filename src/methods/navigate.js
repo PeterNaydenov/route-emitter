@@ -27,7 +27,7 @@ return function navigate ( addressName, data={}, historyEvent=false ) {
                 state.lastLocation = url
                 sessionStorage.setItem ( state.SSName, url )
                 state.lastAddress  = addressName
-                if ( historyEvent )   oldHistoryFlag = false   // Ignore 'inHistory' flag if event is coming from history
+                if ( historyEvent )   oldHistoryFlag = false   // Ignore 'inHistory' flag if event is coming from history or refresh event
                 history.write ({ 
                                   state : { PGID: addressName, url, data }
                                 , url

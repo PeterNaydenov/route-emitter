@@ -15,7 +15,7 @@ return function _locationChange () {
                                 let res = pattern.match ( url );
                                 if ( res ) {
                                             if ( redirect ) {
-                                                    API.navigate ( redirect, data )
+                                                    API.navigate ( redirect, data, true )
                                                     usingRedirect = true
                                                     return false
                                                 }

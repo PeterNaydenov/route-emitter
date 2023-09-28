@@ -11,23 +11,24 @@ const addressList = [
                         {                       
                             name : 'about'      
                           , path : '/__cypress/iframes/about/:name'
-                          , title : p => `About ${p.name}`
+                          , title : p => `About ${p.name}`       // Title as a function
                           , inHistory : true
                         },
                         {
                               name: 'login'
                             , path: '/__cypress/iframes/login'
-                            , redirect: 'home'
+                            , redirect: 'home'                  // Warning: Redirect instruction!
                         }
                 ];
-let router = routeEmitter ();
+
+
 
 describe ( 'routeEmitter: General', () => {
         
   
     
     it ( 'Public API', () => {
-                        router = routeEmitter ();
+                        const router = routeEmitter ();
                         // Should provide the public API:
                         expect ( router ).to.have.property ( 'run' )
                         expect ( router ).to.have.property ( 'setAddresses' )
@@ -43,7 +44,7 @@ describe ( 'routeEmitter: General', () => {
 
 
     it ( 'Chainable methods', () => {
-                    router = routeEmitter ();
+                    const router = routeEmitter ();
                     expect ( router ).to.have.property ( 'run' )
                     expect ( router.run ).to.be.a ( 'function' )
                     // Test for a chainable methods:
@@ -57,7 +58,7 @@ describe ( 'routeEmitter: General', () => {
 
 
     it ( 'Set addresses, list active addresses', () => {
-                    router = routeEmitter ();
+                    const router = routeEmitter ();
                     router.setAddresses ( addressList )
                     const r = router.listAciveAddresses ();
                     expect ( r ).to.be.an ( 'array' )
@@ -69,7 +70,7 @@ describe ( 'routeEmitter: General', () => {
 
     it ( 'Setup and Run it', done => {
                     expect ( document.title ).to.be.equal ( 'Components App' ) // Default title for the test page
-                    router = routeEmitter ()
+                    const router = routeEmitter ()
                             .setAddresses ( addressList )
                             .onChange ((page, data, url) => {
                                                 expect ( url ).to.be.equal ( addressList[0].path )
@@ -228,11 +229,186 @@ describe ( 'routeEmitter: General', () => {
                         .then ( (pg,data) => {
                                 expect ( pg ).to.be.equal ( 'about' )
                                 expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/about/Peter' )
+                                router.navigate ( 'home' )
                                 router.destroy ()
                                 done ()
                             })
                 
         }) // it back and going forward
     
+
+
+    it ( 'Add adddresses after run', () => {
+                // console.log ( window.location.pathname )
+                const addresses = [
+                                                {                       
+                                                      name : 'home'      
+                                                    , path : '/__cypress/iframes/index.html'
+                                                    , inHistory : true
+                                                }
+                                        ];
+                const router = routeEmitter ().setAddresses ( addresses );
+                router.run ()
+
+                router.setAddresses ([{
+                                          name  : 'login'
+                                        , path  : '/__cypress/iframes/login'
+                                        , title : 'App Login'
+                                    }])
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/index.html' )
+                router.navigate ( 'login' )
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/login' )
+                router.navigate ( 'home' )
+                router.destroy ()
+        }) // it add adddresses after run
+
+
+
+    it ( 'Error on missing address', () => {
+                let num, msg;
+                const router = routeEmitter ().setAddresses ([{
+                                                                  name: 'home'
+                                                                , path: '/__cypress/iframes/index.html'
+                                                                , inHistory: true
+                                                        }]);
+                router.onChange ( ( addressName , data ) => {
+                                    expect ( addressName ).to.be.equal ( 'home' )
+                        })
+                router.onError ( ({code, message}) => {
+                                    num = code
+                                    msg = message
+                        })
+                router.run ()
+                router.navigate ( 'login' )
+                expect ( num ).to.be.equal ( 404 )
+                expect ( msg ).to.be.equal ( 'Address "login" is not registered' )
+                router.destroy ()
+        }) // it error on missing address
+
+
+
+    it ( 'Error - missing data', () => {
+                let num, msg;
+                const router = routeEmitter ().setAddresses ([
+                                                        {
+                                                              name: 'home'
+                                                            , path: '/__cypress/iframes/index.html'
+                                                            , inHistory: true
+                                                        },
+                                                        {
+                                                                  name: 'about'
+                                                                , path: '/__cypress/iframes/about/:name'
+                                                                , title: p => `About ${p.name}`
+                                                                , inHistory: true
+                                                        }
+                                                    ]);
+                router.onChange ( ( addressName , data ) => {
+                                    expect ( addressName ).to.be.equal ( 'home' )
+                        })
+                router.onError ( ({code, message}) => {
+                                    num = code
+                                    msg = message
+                        })
+                router.run ()
+                router.navigate ( 'about' )
+                expect ( num ).to.be.equal ( 400 )
+                expect ( msg ).to.be.equal ( 'Data provided for address "about" is not correct. Error: no values provided for key `name`' )
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/index.html' )
+                router.destroy ()
+        }) // it error - missing data
+
+
+
+    it ( 'Remove adddresses after run', () => {
+                let num, msg;
+                const router = routeEmitter ().setAddresses ( addressList );
+                router.removeAddresses ( ['about', 'login'] )
+                router.onError ( ({code, message}) => {
+                                    num = code
+                                    msg = message
+                        })
+                router.run ()
+                router.navigate ( 'login' )
+                expect ( num ).to.be.equal ( 404 )
+                expect ( msg ).to.be.equal ( 'Address "login" is not registered' )
+                router.destroy ()
+        }) // it remove adddresses after run
+
+
+
+    it ( 'List active addresses', () => {
+                let router = routeEmitter ().setAddresses ( addressList );
+                router.removeAddresses ( ['login'] )
+
+                const list = router.listAciveAddresses ();
+                expect ( list.length ).to.be.equal ( 2 )
+                expect ( list ).to.contains ( 'home' )
+                expect ( list ).to.contains ( 'about' )
+                expect ( list ).to.not.contains ( 'login' )
+                router.destroy ()
+        }) // it list active addresses
+
+
+
+    it ( 'List active routes', () => {
+                const router = routeEmitter ().setAddresses ( addressList );
+                const list = router.listActiveRoutes ();
+
+                expect ( list ).to.be.an ( 'array' )
+                expect ( list.length ).to.be.equal ( 3 )
+                expect ( list[0] ).to.be.equal ( 'home ---> /__cypress/iframes/index.html' )
+
+                router.destroy ()
+        }) // it list active routes
+
+
+
+    it ( 'Current address', () => {
+                const router = routeEmitter ().setAddresses ( addressList );
+                router.run ()
+                router.navigate ( 'about', { name: 'John' } )
+                const [name, data] = router.getCurrentAddress ();
+
+                expect ( name ).to.be.equal ( 'about' )
+                expect ( data ).to.have.property ( 'name' )
+                expect ( data.name ).to.be.equal ( 'John' )
+
+                router.navigate ( 'home' )
+                router.destroy ()
+        }) // it current address
+
+
+
+    it ( 'Insert only non existing addresses', () => {
+                const router = routeEmitter ().setAddresses ( addressList );
+                const updateList = [
+                                        {
+                                              name : 'login'
+                                            , path : '/__cypress/iframes/loginUpdated'
+                                            , title : 'App Login'
+                                            , inHistory : true
+                                        },
+                                        {
+                                            name: 'middle'
+                                            , path: '/__cypress/iframes/middle'
+                                            , title: 'Middle'
+                                        }
+                                    ]
+                router.onError ( ({code, message}) => {
+                                    console.log ( code, message )
+                        })
+                router.run()
+                router.setAddresses ( updateList, router.listAciveAddresses() ) // provide second parameter - cancelList. If new addresses have name listed in cancelList - they will not be added or updated
+                
+                const list = router.listActiveRoutes();
+                expect ( list ).to.contains ( 'login ---> /__cypress/iframes/login' )
+                
+                router.navigate ( 'middle' )
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/middle' ) // expect no changes in existing addresses
+
+
+                router.navigate ( 'home' )
+                router.destroy ()
+        }) // it insert only non existing addresses
 
 }) // describe
