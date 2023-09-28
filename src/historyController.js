@@ -11,8 +11,8 @@ function historyController ( ) {
     
     let wait = null;
 
-    function write ({state, title, url},  overwriteFlag ) {
-            if ( !overwriteFlag )    window.history.pushState    ( state, '', url )
+    function write ({state, title, url},  keepHistoryFlag ) {
+            if ( keepHistoryFlag )   window.history.pushState    ( state, '', url )
             else                     window.history.replaceState ( state, '', url )
             const isFn = (typeof title === 'function');
             document.title = isFn ? title ( state.data ) : title
@@ -27,24 +27,29 @@ function historyController ( ) {
 
 
     function listen ( fn ) {
-            window.onpopstate = function ( event ) {
-                                                let { PGID, url, data } = event.state;
-                                                fn ( wait, {addressName:PGID, data, url} )
-                                        }
+            onpopstate = function onPopState ( event ) {
+                                let { PGID, url, data } = event.state;
+                                if ( !wait )   wait = askForPromise ()
+                                fn ( wait, {addressName:PGID, data, url} )
+                                wait = null
+                            }
         } // listen func.
 
 
 
     function back ( steps=1 ) {
-                    wait = askForPromise ()   // history.back is asynch operation. It's applied when event 'popstate' is fired
-                    history.back ()
+                    wait = askForPromise ().timeout ( 1500, 'expire' )   // history.back is asynch operation. It's applied when event 'popstate' is fired
+                    window.history.back ( steps )
+                    wait.onComplete ( d => { if ( d === 'expire')   wait = null }) // prevent unclosed promises
                     return wait.promise            
         } // back func.
 
 
+
     function go ( steps=1 ) {
-                    wait = askForPromise ()   // history.go is asynch operation. It's applied when event 'popstate' is fired
-                    history.go ( steps )
+                    wait = askForPromise ().timeout ( 1500, 'expire' )   // history.go is asynch operation. It's applied when event 'popstate' is fired
+                    window.history.go ( steps )
+                    wait.onComplete ( d => { if ( d === 'expire')   wait = null }) // prevent unclosed promises
                     return wait.promise
         } // go func.
     

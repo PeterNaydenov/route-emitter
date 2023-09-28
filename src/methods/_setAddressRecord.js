@@ -1,5 +1,5 @@
 function _setAddressRecord ( dependencies, state ) {
-return function _setAddressRecord ({name, path, title, inHistory }) {
+return function _setAddressRecord ({name, path, title, inHistory, redirect, data }) {
     
     if ( name == null      )   return null
     if ( path == null      )   return null
@@ -10,7 +10,7 @@ return function _setAddressRecord ({name, path, title, inHistory }) {
           { UrlPattern } = dependencies 
         , pattern = new UrlPattern ( path )
         ;
-    return { name, path, title, inHistory, pattern }
+    return { name, path, title, inHistory, pattern, redirect, data }
 }} // _setAddressRecord func.
 
 

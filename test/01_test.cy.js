@@ -13,6 +13,11 @@ const addressList = [
                           , path : '/__cypress/iframes/about/:name'
                           , title : p => `About ${p.name}`
                           , inHistory : true
+                        },
+                        {
+                              name: 'login'
+                            , path: '/__cypress/iframes/login'
+                            , redirect: 'home'
                         }
                 ];
 let router = routeEmitter ();
@@ -130,6 +135,104 @@ describe ( 'routeEmitter: General', () => {
                                 done ()
                       })
         }) // it back
+
+
+
+    it ( 'Redirect on initial loading', () => {
+                const addressRedirect = [
+                        {                       
+                              name : 'home'      
+                            , path : '/__cypress/iframes/index.html'
+                            , redirect: 'about'
+                            , data : { name: 'John' }
+                        },
+                        {                       
+                            name : 'about'      
+                          , path : '/__cypress/iframes/about/:name'
+                          , title : p => `About ${p.name}`
+                          , inHistory : true
+                        }
+                    ];
+                const router = routeEmitter ().setAddresses ( addressRedirect );
+                router.run ()
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/about/John' )
+                router.navigate ( 'home' )
+                router.destroy ()
+        }) // it redirect
+
+
+
+    it ( 'Redirect during navigate', () => {
+                const addressRedirect = [
+                        {                       
+                              name : 'home'      
+                            , path : '/__cypress/iframes/index.html'
+                        },
+                        {
+                              name : 'login'
+                            , path : '/__cypress/iframes/login'
+                            , redirect: 'about'
+                            , data : { name: 'Peter' }
+                        },
+                        {                       
+                            name : 'about'      
+                          , path : '/__cypress/iframes/about/:name'
+                          , title : p => `About ${p.name}`
+                          , inHistory : true
+                        }
+                    ];
+                const router = routeEmitter ().setAddresses ( addressRedirect );
+                router.run ()
+                router.navigate ( 'login' )
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/about/Peter' )
+                expect ( document.title ).to.be.equal ( 'About Peter' )
+                router.navigate ( 'home' )
+                router.destroy ()
+        }) // it redirect during navigate
+
+
+
+    it ( 'Back and going forward', done => {
+                const addresses = [
+                        {                       
+                              name : 'home'      
+                            , path : '/__cypress/iframes/index.html'
+                            , inHistory : true
+                        },
+                        {
+                              name : 'login'
+                            , path : '/__cypress/iframes/login'
+                            , inHistory : true
+                            
+                        },
+                        {                       
+                            name : 'about'      
+                          , path : '/__cypress/iframes/about/:name'
+                          , title : p => `About ${p.name}`
+                          , inHistory : true
+                        }
+                    ];
+                const router = routeEmitter ().setAddresses ( addresses );
+                router.run ()
+                router.navigate ( 'login' )
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/login' )
+                router.navigate ( 'about', { name: 'Peter' } )
+                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/about/Peter' )
+                
+                router.back ()
+                      .then ( (pg,data) => {
+                                expect ( pg ).to.be.equal ( 'login' )
+                                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/login' )
+                                return router.forward ()
+                            })
+                        .then ( (pg,data) => {
+                                expect ( pg ).to.be.equal ( 'about' )
+                                expect ( window.location.pathname ).to.be.equal ( '/__cypress/iframes/about/Peter' )
+                                router.destroy ()
+                                done ()
+                            })
+                
+        }) // it back and going forward
     
 
 }) // describe

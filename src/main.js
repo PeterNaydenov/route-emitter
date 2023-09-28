@@ -49,7 +49,7 @@ function routeEmitter ( config ) {
               , onError   : fn => { eBus.on ( '_ERROR',   fn ); return dependencies.API }
               , onRefresh : fn => { eBus.on ( '_REFRESH', fn ); return dependencies.API }
               , back      : steps => history.back ( steps )
-              , go        : steps => history.go   ( steps )
+              , forward   : steps => history.go   ( steps )
               , ...APImethods
       }
   return dependencies.API

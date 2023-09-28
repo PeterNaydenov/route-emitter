@@ -1,19 +1,27 @@
 function _locationChange ( dependencies, state ) {
-const { eBus, history } = dependencies;
 return function _locationChange () {
+            const { eBus, history, API } = dependencies;
             let 
                   reload = false
                 , missingURL = true
+                , usingRedirect = false
                 ;
             const 
                   lastLocation = sessionStorage.getItem ( state.SSName )
                 , url = history.read ()
                 ;
             if ( lastLocation && lastLocation === url )   reload = true
-            missingURL = state.rt.every ( ({ name, pattern, title }) => {   // Search for address name
+            missingURL = state.rt.every ( ({ name, pattern, title, redirect, data={} }) => {   // Search for address name
                                 let res = pattern.match ( url );
                                 if ( res ) {
+                                            if ( redirect ) {
+                                                    API.navigate ( redirect, data )
+                                                    usingRedirect = true
+                                                    return false
+                                                }
                                             sessionStorage.setItem ( state.SSName, url )
+                                            state.lastLocation = url
+                                            state.lastAddress  = name
                                             history.write ({ 
                                                               state : { PGID: name, url, data:res }
                                                             , url
@@ -27,6 +35,7 @@ return function _locationChange () {
                                 return true
                         })
             if ( missingURL ) {   // URL is not defined in the address list
+                        if ( usingRedirect )   return
                         eBus.emit ( '_ERROR', { code: 404, message: `There is no defined address for path "${url}".` })
                         return 
                 }
