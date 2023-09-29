@@ -1,8 +1,8 @@
 function navigate ( dependencies, state ) {
 const { history, eBus } = dependencies;
 return function navigate ( addressName, data={}, historyEvent=false ) {
-    // historyEvent flag should be 'true' only if 'navigate' is called from '_historyActions'.
-    // This flag prevents history line - forwards and backwards. 
+    // historyEvent flag should be 'true' if 'navigate' is called from '_historyActions' or in _locationChange is detected 'reload' event.
+    // This historyEvent flag prevents history line - forwards and backwards. 
     if ( !state.isActive ) {  // Don't use navigate before router.run()
                 console.error ( 'Router is not active. Use router.run() to activate it.' )
                 return
