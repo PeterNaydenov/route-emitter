@@ -34,7 +34,7 @@ describe ( 'routeEmitter: General', () => {
                         expect ( router ).to.have.property ( 'setAddresses' )
                         expect ( router ).to.have.property ( 'onChange' )
                         expect ( router ).to.have.property ( 'onError' )
-                        expect ( router ).to.have.property ( 'onRefresh' )
+                        expect ( router ).to.have.property ( 'onReload' )
                         expect ( router ).to.have.property ( 'destroy' )
                         expect ( router ).to.have.property ( 'navigate' )
                         expect ( router ).to.have.property ( 'back' )
@@ -52,7 +52,7 @@ describe ( 'routeEmitter: General', () => {
                     expect ( router.removeAddresses( addressList) ).to.have.property ( 'run' )
                     expect ( router.onChange( () => {} ) ).to.have.property ( 'run' )
                     expect ( router.onError( () => {} ) ).to.have.property ( 'run' )
-                    expect ( router.onRefresh( () => {} ) ).to.have.property ( 'run' )
+                    expect ( router.onReload( () => {} ) ).to.have.property ( 'run' )
         }) // it chainable methods
 
 
