@@ -1,9 +1,10 @@
 # Release History
 
 
-### 2.0.0 ( 2023-09-... )
+
+### 2.0.0 ( 2023-09-29 )
 - [x] Refactoring: React-router is no longer a dependency;
-- [x] Configuration model is changed;
+- [x] Complete rewrite of the application;
 
 
 

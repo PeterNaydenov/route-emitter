@@ -3,7 +3,7 @@
  *    Route-emitter
  * 
  *    - Published for first time: October 10th, 2022
- *    - Version 2: September 28th, 2023
+ *    - Version 2 - full rewrite: September 29th, 2023
  * 
  */
 
@@ -48,8 +48,10 @@ function routeEmitter ( config ) {
                 onChange  : fn => { eBus.on ( '_CHANGE',  fn ); return dependencies.API }
               , onError   : fn => { eBus.on ( '_ERROR',   fn ); return dependencies.API }
               , onReload  : fn => { eBus.on ( '_RELOAD', fn ); return dependencies.API }
+              // History related methods
               , back      : steps => history.back ( steps )
               , forward   : steps => history.go   ( steps )
+              // Router related methods
               , ...APImethods
       }
   return dependencies.API
