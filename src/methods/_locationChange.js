@@ -28,7 +28,7 @@ return function _locationChange () {
                                                             , title
                                                         }, true )
                                                         
-                                            if ( reload )    eBus.emit ( '_REFRESH', name, res, url )
+                                            if ( reload )    eBus.emit ( '_RELOAD', name, res, url )
                                             else             eBus.emit ( '_CHANGE',  name, res, url )
                                             return false   // Prevents duplicated data in the browser.history
                                     }

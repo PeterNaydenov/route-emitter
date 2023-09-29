@@ -5,7 +5,7 @@
 
 
 
-Provide an list of "**application addresses**"(in brief: *'address list'*) and `route-emitter` can take control over change of the URL, page titles and browser history records. 
+Provide an list of "**application addresses**"(in brief: *'address list'*) and `route-emitter` can take control over change of the URL, page titles and browser history records.
 
 
 ## What route-emitter can do?

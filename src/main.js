@@ -47,7 +47,7 @@ function routeEmitter ( config ) {
               // Event related methods
                 onChange  : fn => { eBus.on ( '_CHANGE',  fn ); return dependencies.API }
               , onError   : fn => { eBus.on ( '_ERROR',   fn ); return dependencies.API }
-              , onRefresh : fn => { eBus.on ( '_REFRESH', fn ); return dependencies.API }
+              , onReload  : fn => { eBus.on ( '_RELOAD', fn ); return dependencies.API }
               , back      : steps => history.back ( steps )
               , forward   : steps => history.go   ( steps )
               , ...APImethods
