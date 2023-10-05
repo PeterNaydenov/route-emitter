@@ -411,4 +411,24 @@ describe ( 'routeEmitter: General', () => {
                 router.destroy ()
         }) // it insert only non existing addresses
 
+
+
+    it ( 'Create URL', () => {
+                const router = routeEmitter ().setAddresses ( addressList );
+                
+                const aboutURL = router.createURL ( 'about', { name: 'Peter' }); // Address 'about' is registered and need a data, so expect URL
+                expect ( aboutURL ).to.be.equal ( '/__cypress/iframes/about/Peter' )
+
+                const loginURL = router.createURL ( 'login' ); // Address 'login' is registered and don't need a data, so expect URL
+                expect ( loginURL ).to.be.equal ( '/__cypress/iframes/login' )
+
+                const wrongURL = router.createURL ( 'wrong' ) // Address 'wrong' is not registered, so expect error and result is null
+                expect ( wrongURL ).to.be.equal ( null )
+
+                const noAddressURL = router.createURL ( 'about' ) // Need a data, so expect error and result is null
+                expect ( noAddressURL ).to.be.equal ( null )
+
+                router.destroy ()
+        }) // it create URL
+
 }) // describe

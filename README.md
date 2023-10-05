@@ -101,6 +101,7 @@ router.run ()
  , removeAddresses     : 'Remove addresses from the list by name'
  , getCurrentAddress   : 'Returns the current address name and data'
  , navigate            : 'Change current address. Will not generate "change" signal'
+ , createURL           : 'Create URL from address name and data (In version 2.1.0 and above)'
 
  , onChange  : 'Register a callback function for "change" signal'
  , onRefresh : 'Register a callback function for "refresh" signal'

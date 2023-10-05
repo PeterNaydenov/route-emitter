@@ -2,6 +2,7 @@ import _historyActions    from "./_historyActions.js"
 import _locationChange    from "./_locationChange.js"
 import _setAddressRecord  from "./_setAddressRecord.js"  
 
+import createURL          from "./createURL.js"
 import getCurrentAddress  from "./getCurrentAddress.js"
 import destroy            from "./destroy.js"
 import listAciveAddresses from "./listActiveAddresses.js"
@@ -19,6 +20,7 @@ export default {
                 , _setAddressRecord       // Individual address record preparation
 
                 // API methods
+                , createURL
                 , getCurrentAddress
                 , destroy
                 , listAciveAddresses
