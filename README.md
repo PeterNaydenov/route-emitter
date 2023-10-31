@@ -2,6 +2,8 @@
 
 ![version](https://img.shields.io/github/package-json/v/peterNaydenov/route-emitter)
 ![license](https://img.shields.io/github/license/peterNaydenov/route-emitter)
+![GitHub issues](https://img.shields.io/github/issues-raw/peterNaydenov/route-emitter)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/%40peter.naydenov%2Froute-emitter)
 
 
 
