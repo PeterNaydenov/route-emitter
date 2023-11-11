@@ -1,6 +1,10 @@
 # Release History
 
 
+### 2.1.2 (2023-11-11)
+- [x] Dependency update: @peter.naydenov/notice@2.2.2;
+
+
 
 ### 2.0.0 ( 2023-09-29 )
 - [x] Refactoring: React-router is no longer a dependency;
