@@ -1,27 +1,27 @@
 {
   "name": "@peter.naydenov/route-emitter",
   "description": "Changes in URL are converted in events according routes definition list",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "license": "MIT",
   "author": "Peter Naydenov",
   "main": "./dist/route-emitter.umd.js",
   "type": "module",
-  "exports" : {
+  "exports": {
     ".": {
-              "import": "./dist/route-emitter.esm.mjs",
-              "require": "./dist/route-emitter.cjs",
-              "default": "./dist/route-emitter.umd.js"
-        },
+      "import": "./dist/route-emitter.esm.mjs",
+      "require": "./dist/route-emitter.cjs",
+      "default": "./dist/route-emitter.umd.js"
+    },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*",
     "./src/*": "./src/*"
   },
   "scripts": {
-        "dev": "vite",
-        "build": "rollup -c",
-        "preview": "vite preview",
-        "test": "npx cypress run --component --browser chrome"
-      },
+    "dev": "vite",
+    "build": "rollup -c",
+    "preview": "vite preview",
+    "test": "npx cypress run --component --browser chrome"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/PeterNaydenov/route-emitter.git"
