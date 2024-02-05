@@ -119,6 +119,7 @@ router.run ()
 
 
 ## External Links
+- [Changelog](https://github.com/PeterNaydenov/route-emitter/blob/master/Changelog.md)
 - [Migration guide](https://github.com/PeterNaydenov/route-emitter/blob/master/Migration.guide.md)
 - [Documentation v.1.x.x](https://github.com/PeterNaydenov/route-emitter/blob/master/README_v.1.x.x.md)
 

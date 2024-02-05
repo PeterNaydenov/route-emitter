@@ -1,6 +1,15 @@
 # Release History
 
 
+
+### 2.2.0 (2024-02-05)
+- [x]  Folder 'dist' was added to the project. Includes commonjs, umd and esm versions of the library;
+ - [x] Package.json: "exports" section was added. Allows you to use package as commonjs or es6 module without additional configuration;
+ - [x] Rollup was added to the project. Used to build the library versions;
+
+
+
+
 ### 2.1.2 (2023-11-11)
 - [x] Dependency update: @peter.naydenov/notice@2.2.2;
 

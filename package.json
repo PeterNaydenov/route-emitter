@@ -2,31 +2,45 @@
   "name": "@peter.naydenov/route-emitter",
   "description": "Changes in URL are converted in events according routes definition list",
   "version": "2.1.2",
-  "type": "module",
   "license": "MIT",
-  "main": "src/main.js",
+  "author": "Peter Naydenov",
+  "main": "./dist/route-emitter.umd.js",
+  "type": "module",
+  "exports" : {
+    ".": {
+              "import": "./dist/route-emitter.esm.mjs",
+              "require": "./dist/route-emitter.cjs",
+              "default": "./dist/route-emitter.umd.js"
+        },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*",
+    "./src/*": "./src/*"
+  },
+  "scripts": {
+        "dev": "vite",
+        "build": "rollup -c",
+        "preview": "vite preview",
+        "test": "npx cypress run --component --browser chrome"
+      },
   "repository": {
     "type": "git",
     "url": "https://github.com/PeterNaydenov/route-emitter.git"
   },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "npx cypress run --component --browser chrome"
-  },
   "dependencies": {
-    "@peter.naydenov/notice": "^2.2.2",
-    "ask-for-promise": "^1.5.0",
+    "@peter.naydenov/notice": "^2.2.3",
+    "ask-for-promise": "^2.0.3",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
-    "@types/react": "^18.2.46",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@peter.naydenov/visual-controller-for-react": "^2.2.2",
+    "@types/react": "^18.2.53",
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
-    "@peter.naydenov/visual-controller-for-react": "^2.2.2",
-    "cypress": "^13.6.2",
-    "vite": "^5.0.10"
+    "cypress": "^13.6.4",
+    "vite": "^5.0.12"
   },
   "keywords": [
     "micro",
