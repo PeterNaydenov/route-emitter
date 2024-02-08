@@ -36,11 +36,11 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@peter.naydenov/visual-controller-for-react": "^2.2.2",
-    "@types/react": "^18.2.53",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
     "cypress": "^13.6.4",
-    "vite": "^5.0.12"
+    "vite": "^5.1.0"
   },
   "keywords": [
     "micro",
