@@ -27,7 +27,7 @@
     "url": "https://github.com/PeterNaydenov/route-emitter.git"
   },
   "dependencies": {
-    "@peter.naydenov/notice": "^2.2.3",
+    "@peter.naydenov/notice": "^2.3.1",
     "ask-for-promise": "^2.0.3",
     "url-pattern": "^1.0.3"
   },
@@ -36,11 +36,11 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@peter.naydenov/visual-controller-for-react": "^2.2.4",
-    "@types/react": "^18.2.57",
-    "@types/react-dom": "^18.2.19",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.2.24",
     "@vitejs/plugin-react": "^4.2.1",
-    "cypress": "^13.6.6",
-    "vite": "^5.1.4"
+    "cypress": "^13.7.2",
+    "vite": "^5.2.8"
   },
   "keywords": [
     "micro",

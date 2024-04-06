@@ -2,6 +2,13 @@
 
 
 
+### 2.2.1 ( 2024-04-06)
+- [x] Dependency update. @peter.naydenov/notice - v. 2.3.1
+- [x] Dev dependencies updates.
+
+
+
+
 ### 2.2.0 (2024-02-05)
 - [x]  Folder 'dist' was added to the project. Includes commonjs, umd and esm versions of the library;
  - [x] Package.json: "exports" section was added. Allows you to use package as commonjs or es6 module without additional configuration;
