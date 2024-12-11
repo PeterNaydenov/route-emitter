@@ -2,9 +2,15 @@
 
 
 
+### 2.2.2 (2024-12-11)
+- [x] Fix: Folder dist is not available in npm package;
+
+
+
 ### 2.2.1 ( 2024-04-06)
 - [x] Dependency update. @peter.naydenov/notice - v. 2.3.1
 - [x] Dev dependencies updates.
+- [ ] Bug: Folder dist is not available in npm package;
 
 
 
