@@ -79,7 +79,7 @@ Router has 2 configuration options:
 Configuration if needed could be provided to routeEmmiter during initialization:     
 ```js
 const config = { appName: 'My App', sessionStorageKey: 'myAppLastLocation' }
-const router = routeEmmiter ( config )
+const router = routeEmitter ( config )
 ```
 
 Before `run` the router provide at least one address - current address. On `run` the router will start evaluating the URL against the address list. If URL is not recognized, the router will signal an `error`. If URL is recognized, the router will signal `change` and will execute the callback function if any provided.
