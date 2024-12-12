@@ -2,6 +2,12 @@
 
 
 
+### 2.2.3 (2024-12-12)
+- [x] Generate d.ts files on build;
+- [x] Compression of build files was removed;
+
+
+
 ### 2.2.2 (2024-12-11)
 - [x] Fix: Folder dist is not available in npm package;
 

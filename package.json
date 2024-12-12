@@ -4,13 +4,14 @@
   "version": "2.2.2",
   "license": "MIT",
   "author": "Peter Naydenov",
-  "main": "./dist/route-emitter.umd.js",
+  "main": "src/main.js",
   "type": "module",
+  "types": "types/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/route-emitter.esm.mjs",
+      "import": "./src/main.js",
       "require": "./dist/route-emitter.cjs",
-      "default": "./dist/route-emitter.umd.js"
+      "default": "./src/main.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*",
@@ -19,6 +20,7 @@
   "scripts": {
     "dev": "vite",
     "build": "rollup -c",
+    "postbuild": "tsc -p tsconfig.json",
     "preview": "vite preview",
     "test": "npx cypress run --component --browser chrome"
   },
@@ -32,15 +34,16 @@
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
+    "@peter.naydenov/visual-controller-for-react": "^2.2.4",
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-node-resolve": "^15.3.0",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@peter.naydenov/visual-controller-for-react": "^2.2.4",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "cypress": "^13.15.0",
-    "vite": "^5.4.10"
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "cypress": "^13.16.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3"
   },
   "keywords": [
     "micro",

@@ -1,6 +1,5 @@
 import resolve    from '@rollup/plugin-node-resolve'
 import commonjs   from '@rollup/plugin-commonjs'
-import terser     from '@rollup/plugin-terser';
 
 
 export default [
@@ -20,7 +19,6 @@ export default [
 		plugins: [
 			resolve(), // so Rollup can find `ms`
 			commonjs() // so Rollup can convert `ms` to an ES module
-			, terser()
 		]
 	},
 
@@ -37,6 +35,6 @@ export default [
 			{ file: 'dist/route-emitter.cjs'    , format: 'cjs' },
 			{ file: 'dist/route-emitter.esm.mjs', format: 'es' }
 		],
-		plugins: [ terser() ]
+		plugins: []
 	}
 ];

@@ -1,1 +1,806 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e="undefined"!=typeof globalThis?globalThis:e||self).routeEmitter=t()}(this,(function(){"use strict";var e="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function t(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,"default")?e.default:e}var n={exports:{}};!function(t,n){var r,o,a=[].slice;r=e,o=function(){var e,t,n,r,o,i,s,u,l,c,f,d,g,h,m;return l=function(e){return e.replace(/[-\/\\^$*+?.()|[\]{}]/g,"\\$&")},s=function(e,t){var n,r,o;for(o=[],n=-1,r=e.length;++n<r;)o=o.concat(t(e[n]));return o},h=function(e,t){var n,r,o;for(o="",n=-1,r=e.length;++n<r;)o+=t(e[n]);return o},g=function(e){return new RegExp(e.toString()+"|").exec("").length-1},f=function(e,t){var n,r,o,a,i;for(a={},n=-1,o=e.length;++n<o;)r=e[n],null!=(i=t[n])&&(null!=a[r]?(Array.isArray(a[r])||(a[r]=[a[r]]),a[r].push(i)):a[r]=i);return a},(e={}).Result=function(e,t){this.value=e,this.rest=t},e.Tagged=function(e,t){this.tag=e,this.value=t},e.tag=function(t,n){return function(r){var o,a;if(null!=(o=n(r)))return a=new e.Tagged(t,o.value),new e.Result(a,o.rest)}},e.regex=function(t){return function(n){var r,o;if(null!=(r=t.exec(n)))return o=r[0],new e.Result(o,n.slice(o.length))}},e.sequence=function(){var t;return t=1<=arguments.length?a.call(arguments,0):[],function(n){var r,o,a,i,s;for(r=-1,o=t.length,s=[],a=n;++r<o;){if(null==(i=(0,t[r])(a)))return;s.push(i.value),a=i.rest}return new e.Result(s,a)}},e.pick=function(){var t,n;return t=arguments[0],n=2<=arguments.length?a.call(arguments,1):[],function(r){var o,a;if(null!=(a=e.sequence.apply(e,n)(r)))return o=a.value,a.value=o[t],a}},e.string=function(t){var n;return n=t.length,function(r){if(r.slice(0,n)===t)return new e.Result(t,r.slice(n))}},e.lazy=function(e){var t;return t=null,function(n){return null==t&&(t=e()),t(n)}},e.baseMany=function(t,n,r,o,a){var i,s,u;for(s=a,u=r?"":[];(null==n||null==n(s))&&null!=(i=t(s));)r?u+=i.value:u.push(i.value),s=i.rest;if(!o||0!==u.length)return new e.Result(u,s)},e.many1=function(t){return function(n){return e.baseMany(t,null,!1,!0,n)}},e.concatMany1Till=function(t,n){return function(r){return e.baseMany(t,n,!0,!0,r)}},e.firstChoice=function(){var e;return e=1<=arguments.length?a.call(arguments,0):[],function(t){var n,r,o;for(n=-1,r=e.length;++n<r;)if(null!=(o=(0,e[n])(t)))return o}},d=function(t){var n;return(n={}).wildcard=e.tag("wildcard",e.string(t.wildcardChar)),n.optional=e.tag("optional",e.pick(1,e.string(t.optionalSegmentStartChar),e.lazy((function(){return n.pattern})),e.string(t.optionalSegmentEndChar))),n.name=e.regex(new RegExp("^["+t.segmentNameCharset+"]+")),n.named=e.tag("named",e.pick(1,e.string(t.segmentNameStartChar),e.lazy((function(){return n.name})))),n.escapedChar=e.pick(1,e.string(t.escapeChar),e.regex(/^./)),n.static=e.tag("static",e.concatMany1Till(e.firstChoice(e.lazy((function(){return n.escapedChar})),e.regex(/^./)),e.firstChoice(e.string(t.segmentNameStartChar),e.string(t.optionalSegmentStartChar),e.string(t.optionalSegmentEndChar),n.wildcard))),n.token=e.lazy((function(){return e.firstChoice(n.wildcard,n.optional,n.named,n.static)})),n.pattern=e.many1(e.lazy((function(){return n.token}))),n},u={escapeChar:"\\",segmentNameStartChar:":",segmentValueCharset:"a-zA-Z0-9-_~ %",segmentNameCharset:"a-zA-Z0-9",optionalSegmentStartChar:"(",optionalSegmentEndChar:")",wildcardChar:"*"},i=function(e,t){if(Array.isArray(e))return h(e,(function(e){return i(e,t)}));switch(e.tag){case"wildcard":return"(.*?)";case"named":return"(["+t+"]+)";case"static":return l(e.value);case"optional":return"(?:"+i(e.value,t)+")?"}},o=function(e,t){return null==t&&(t=u.segmentValueCharset),"^"+i(e,t)+"$"},r=function(e){if(Array.isArray(e))return s(e,r);switch(e.tag){case"wildcard":return["_"];case"named":return[e.value];case"static":return[];case"optional":return r(e.value)}},c=function(e,t,n,r){var o,a,i;if(null==r&&(r=!1),null!=(i=e[t])){if(!((o=n[t]||0)>(Array.isArray(i)?i.length-1:0)))return a=Array.isArray(i)?i[o]:i,r&&(n[t]=o+1),a;if(r)throw new Error("too few values provided for key `"+t+"`")}else if(r)throw new Error("no values provided for key `"+t+"`")},n=function(e,t,r){var o,a;if(Array.isArray(e)){for(o=-1,a=e.length;++o<a;)if(n(e[o],t,r))return!0;return!1}switch(e.tag){case"wildcard":return null!=c(t,"_",r,!1);case"named":return null!=c(t,e.value,r,!1);case"static":return!1;case"optional":return n(e.value,t,r)}},m=function(e,t,r){if(Array.isArray(e))return h(e,(function(e){return m(e,t,r)}));switch(e.tag){case"wildcard":return c(t,"_",r,!0);case"named":return c(t,e.value,r,!0);case"static":return e.value;case"optional":return n(e.value,t,r)?m(e.value,t,r):""}},(t=function(e,n){var a,i,s;if(e instanceof t)return this.isRegex=e.isRegex,this.regex=e.regex,this.ast=e.ast,void(this.names=e.names);if(this.isRegex=e instanceof RegExp,"string"!=typeof e&&!this.isRegex)throw new TypeError("argument must be a regex or a string");if(this.isRegex){if(this.regex=e,null!=n){if(!Array.isArray(n))throw new Error("if first argument is a regex the second argument may be an array of group names but you provided something else");if(a=g(this.regex),n.length!==a)throw new Error("regex contains "+a+" groups but array of group names contains "+n.length);this.names=n}}else{if(""===e)throw new Error("argument must not be the empty string");if(e.replace(/\s+/g,"")!==e)throw new Error("argument must not contain whitespace");if(i={escapeChar:(null!=n?n.escapeChar:void 0)||u.escapeChar,segmentNameStartChar:(null!=n?n.segmentNameStartChar:void 0)||u.segmentNameStartChar,segmentNameCharset:(null!=n?n.segmentNameCharset:void 0)||u.segmentNameCharset,segmentValueCharset:(null!=n?n.segmentValueCharset:void 0)||u.segmentValueCharset,optionalSegmentStartChar:(null!=n?n.optionalSegmentStartChar:void 0)||u.optionalSegmentStartChar,optionalSegmentEndChar:(null!=n?n.optionalSegmentEndChar:void 0)||u.optionalSegmentEndChar,wildcardChar:(null!=n?n.wildcardChar:void 0)||u.wildcardChar},null==(s=d(i).pattern(e)))throw new Error("couldn't parse pattern");if(""!==s.rest)throw new Error("could only partially parse pattern");this.ast=s.value,this.regex=new RegExp(o(this.ast,i.segmentValueCharset)),this.names=r(this.ast)}}).prototype.match=function(e){var t,n;return null==(n=this.regex.exec(e))?null:(t=n.slice(1),this.names?f(this.names,t):t)},t.prototype.stringify=function(e){if(null==e&&(e={}),this.isRegex)throw new Error("can't stringify patterns generated from a regex");if(e!==Object(e))throw new Error("argument must be an object or undefined");return m(this.ast,e,{})},t.escapeForRegex=l,t.concatMap=s,t.stringConcatMap=h,t.regexGroupCount=g,t.keysAndValuesToObject=f,t.P=e,t.newParser=d,t.defaultOptions=u,t.astNodeToRegexString=o,t.astNodeToNames=r,t.getParam=c,t.astNodeContainsSegmentsForProvidedParams=n,t.stringify=m,t},null!==n?t.exports=o():r.UrlPattern=o()}(n,n.exports);var r=t(n.exports);function o(e){let t,n=!1;return e?(t=function(e){let t=e.map((e=>a())),n=t.map((e=>e.promise));return t.promises=n,t.onComplete=i(Promise.all(n)),t}(e),n=!0):t=a(),t.timeout=function(e,t){let n;return n=e?Promise.all(t.promises):t.promise,function(e,r){let o,a=new Promise(((t,a)=>{o=setTimeout((()=>{t(r),Promise.resolve(n)}),e)}));return n.then((()=>clearTimeout(o))),t.onComplete=i(Promise.race([n,a])),t}}(n,t),t}function a(){let e,t;const n=new Promise(((n,r)=>{e=n,t=r}));return{promise:n,done:e,cancel:t,onComplete:i(n)}}function i(e){return function(t){e.then((e=>t(e)))}}o.sequence=function(e,...t){const n=o(),r=[],a=function*(e){for(const t of e)yield t}(e);return function e(t,...o){t.done?n.done(r):t.value(...o).then((t=>{r.push(t),e(a.next(),...o,t)}))}(a.next(),...t),n},o.all=function(e,...t){const n=o(),r=[],a=e.map(((e,n)=>"function"==typeof e?e(...t).then((e=>r[n]=e)):e.then((e=>r[n]=e))));return Promise.all(a).then((()=>n.done(r))),n};var s={_historyActions:function(e,t){return function(n,{addressName:r,data:o,url:a}){const{eBus:i,API:s}=e,u=t.lastLocation;s.navigate(r,o,!0),u===a?i.emit("_RELOAD",r,o,a):i.emit("_CHANGE",r,o,a),n.done(r,o)}},_locationChange:function(e,t){return function(){const{eBus:n,history:r,API:o}=e;let a=!1,i=!0,s=!1;const u=sessionStorage.getItem(t.SSName),l=r.read();if(u&&u===l&&(a=!0),i=t.rt.every((({name:e,pattern:i,title:u,redirect:c,data:f={}})=>{let d=i.match(l);return!d||(c?(o.navigate(c,f,!0),s=!0,!1):(sessionStorage.setItem(t.SSName,l),t.lastLocation=l,t.lastAddress=e,r.write({state:{PGID:e,url:l,data:d},url:l,title:u},!0),a?n.emit("_RELOAD",e,d,l):n.emit("_CHANGE",e,d,l),!1))})),i){if(s)return;n.emit("_ERROR",{code:404,message:`There is no defined address for path "${l}".`})}else t.lastRoute=l}},_setAddressRecord:function(e,t){return function({name:n,path:r,title:o,inHistory:a,redirect:i,data:s}){if(null==n)return null;if(null==r)return null;null==o&&(o=t.appName),null==a&&(a=!1);const{UrlPattern:u}=e;return{name:n,path:r,title:o,inHistory:a,pattern:new u(r),redirect:i,data:s}}},createURL:function(e,t){return function(e,n={}){const{routes:r}=t;if(!r[e])return console.error(`Address "${e}" is not registered`),null;const{pattern:o}=r[e];try{return o.stringify(n)}catch(t){return console.error(`Data provided for address "${e}" is not correct.`),null}}},getCurrentAddress:function(e,t){return function(){const{lastAddress:e,lastLocation:n,routes:r}=t,{pattern:o}=r[e];let a=o.match(n);return[t.lastAddress,a]}},destroy:function(e,t){return function(){const{eBus:n,history:r,dead:o}=e;t.isActive=!1,n.off(),r.destroy(),sessionStorage.removeItem(t.SSName),e.API={on:o,navigate:o,destroy:o}}},listAciveAddresses:function(e,t){return function(){return t.rt.map((e=>e.name))}},listActiveRoutes:function(e,t){return function(){const{rt:e}=t;return e.map((e=>`${e.name} ---\x3e ${e.path}`))}},navigate:function(e,t){const{history:n,eBus:r}=e;return function e(o,a={},i=!1){if(!t.isActive)return void console.error("Router is not active. Use router.run() to activate it.");const{lastAddress:s,lastLocation:u,routes:l}=t;if(!l[o])return console.error(`Address "${o}" is not registered`),void r.emit("_ERROR",{code:404,message:`Address "${o}" is not registered`});let c=!1;const{pattern:f,title:d,redirect:g,data:h}=l[o];if(g)e(g,h);else{s&&(c=l[s].inHistory);try{const e=f.stringify(a);if(e===u)return;t.lastLocation=e,sessionStorage.setItem(t.SSName,e),t.lastAddress=o,i&&(c=!1),n.write({state:{PGID:o,url:e,data:a},url:e,title:d},c)}catch(e){return void r.emit("_ERROR",{code:400,message:`Data provided for address "${o}" is not correct. ${e}`})}}}},removeAddresses:function(e,t){return function(n){const{rt:r}=t;return t.rt=r.reduce(((e,r)=>{let{name:o}=r;return n.includes(o)?(delete t.routes[o],e):(e.push(r),e)}),[]),e.API}},run:function(e,t){return function(){const{inAPI:n,history:r}=e;t.isActive=!0,r.listen(n._historyActions),n._locationChange()}},setAddresses:function(e,t){return function(n,r=[]){const{_setAddressRecord:o}=e.inAPI;return n.forEach((e=>{const n=o(e);if(!n)return;if(r.includes(n.name))return;const a=n.name;t.rt.push(n),t.routes[a]=n})),e.API}}};return function(e){const t=new function(){let e={"*":[]},t={},n=[],r=!1,o="";return{on:function(t,n){e[t]||(e[t]=[]),e[t].push(n)},once:function(e,n){"*"!==e&&(t[e]||(t[e]=[]),t[e].push(n))},off:function(n,r){if(r)return e[n]&&(e[n]=e[n].filter((e=>e!==r))),t[n]&&(t[n]=t[n].filter((e=>e!==r))),e[n]&&0===e[n].length&&delete e[n],void(t[n]&&0===t[n].length&&delete e[n]);t[n]&&delete t[n],e[n]&&delete e[n]},reset:function(){e={"*":[]},t={},n=[]},emit:function(){const[a,...i]=arguments;function s(t){let r=!1;"*"!==t&&(n.includes(t)||(e[t].every((e=>{const t=e(...i);return"string"!=typeof t||"STOP"!==t.toUpperCase()||(r=!0,!1)})),r||e["*"].forEach((e=>e(a,...i)))))}if(r&&(console.log(`${o} Event "${a}" was triggered.`),i.length>0&&(console.log("Arguments:"),console.log(...i),console.log("^----"))),"*"!==a){if(t[a]){if(n.includes(a))return;t[a].forEach((e=>e(...i))),delete t[a]}e[a]&&s(a)}else Object.keys(e).forEach((e=>s(e)))},stop:function(r){if("*"!==r)n.push(r);else{const r=Object.keys(e),o=Object.keys(t);n=[...o,...r]}},start:function(e){n="*"!==e?n.filter((t=>e!=t)):[]},debug:function(e,t){r=!!e,t&&"string"==typeof t&&(o=t)}}},n=function(){let e=null;return{write:function({state:e,title:t,url:n},r){r?window.history.pushState(e,"",n):window.history.replaceState(e,"",n);const o="function"==typeof t;document.title=o?t(e.data):t},read:function(){return window.location.pathname},back:function(t=1){return e=o().timeout(1500,"expire"),window.history.back(t),e.onComplete((t=>{"expire"===t&&(e=null)})),e.promise},go:function(t=1){return e=o().timeout(1500,"expire"),window.history.go(t),e.onComplete((t=>{"expire"===t&&(e=null)})),e.promise},listen:function(t){onpopstate=function(n){let{PGID:r,url:a,data:i}=n.state;e||(e=o()),t(e,{addressName:r,data:i,url:a}),e=null}},destroy:function(){window.onpopstate=null}}}(),{appName:a,sessionStorageKey:i}=e||{},u={lastLocation:"",lastAddress:null,SSName:"_routeEmmiterLastLocation",appName:"App Name",rt:[],routes:{},isActive:!1},l={UrlPattern:r,eBus:t,history:n,dead:()=>console.error("Router was destroyed")},c={},f={};return a&&"string"==typeof a&&(u.appName=a),i&&"string"==typeof i&&(u.SSName=i),Object.entries(s).forEach((([e,t])=>{e.startsWith("_")?f[e]=t(l,u):c[e]=t(l,u)})),l.inAPI=f,l.API={onChange:e=>(t.on("_CHANGE",e),l.API),onError:e=>(t.on("_ERROR",e),l.API),onReload:e=>(t.on("_RELOAD",e),l.API),back:e=>n.back(e),forward:e=>n.go(e),...c},l.API}}));
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.routeEmitter = factory());
+})(this, (function () { 'use strict';
+
+	function e$1(){return new function(){let e={"*":[]},t={},n=[],o=!1,c="";return {on:function(t,n){e[t]||(e[t]=[]),e[t].push(n);},once:function(e,n){"*"!==e&&(t[e]||(t[e]=[]),t[e].push(n));},off:function(n,o){if(o)return e[n]&&(e[n]=e[n].filter((e=>e!==o))),t[n]&&(t[n]=t[n].filter((e=>e!==o))),e[n]&&0===e[n].length&&delete e[n],void(t[n]&&0===t[n].length&&delete e[n]);t[n]&&delete t[n],e[n]&&delete e[n];},reset:function(){e={"*":[]},t={},n=[];},emit:function(){const[f,...i]=arguments;function l(t){let o=!1;"*"!==t&&(n.includes(t)||(e[t].every((e=>{const t=e(...i);return "string"!=typeof t||("STOP"!==t.toUpperCase()||(o=!0,!1))})),o||e["*"].forEach((e=>e(f,...i)))));}if(o&&(console.log(`${c} Event "${f}" was triggered.`),i.length>0&&(console.log("Arguments:"),console.log(...i),console.log("^----"))),"*"!==f){if(t[f]){if(n.includes(f))return;t[f].forEach((e=>e(...i))),delete t[f];}e[f]&&l(f);}else {Object.keys(e).forEach((e=>l(e)));}},stop:function(o){if("*"!==o)n.push(o);else {const o=Object.keys(e),c=Object.keys(t);n=[...c,...o];}},start:function(e){n="*"!==e?n.filter((t=>e!=t)):[];},debug:function(e,t){o=!!e,t&&"string"==typeof t&&(c=t);}}}}
+
+	function getDefaultExportFromCjs (x) {
+		return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+	}
+
+	var urlPattern$1 = {exports: {}};
+
+	var urlPattern = urlPattern$1.exports;
+
+	var hasRequiredUrlPattern;
+
+	function requireUrlPattern () {
+		if (hasRequiredUrlPattern) return urlPattern$1.exports;
+		hasRequiredUrlPattern = 1;
+		(function (module, exports) {
+			// Generated by CoffeeScript 1.10.0
+			var slice = [].slice;
+
+			(function(root, factory) {
+			  if (exports !== null) {
+			    return module.exports = factory();
+			  } else {
+			    return root.UrlPattern = factory();
+			  }
+			})(urlPattern, function() {
+			  var P, UrlPattern, astNodeContainsSegmentsForProvidedParams, astNodeToNames, astNodeToRegexString, baseAstNodeToRegexString, concatMap, defaultOptions, escapeForRegex, getParam, keysAndValuesToObject, newParser, regexGroupCount, stringConcatMap, stringify;
+			  escapeForRegex = function(string) {
+			    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+			  };
+			  concatMap = function(array, f) {
+			    var i, length, results;
+			    results = [];
+			    i = -1;
+			    length = array.length;
+			    while (++i < length) {
+			      results = results.concat(f(array[i]));
+			    }
+			    return results;
+			  };
+			  stringConcatMap = function(array, f) {
+			    var i, length, result;
+			    result = '';
+			    i = -1;
+			    length = array.length;
+			    while (++i < length) {
+			      result += f(array[i]);
+			    }
+			    return result;
+			  };
+			  regexGroupCount = function(regex) {
+			    return (new RegExp(regex.toString() + '|')).exec('').length - 1;
+			  };
+			  keysAndValuesToObject = function(keys, values) {
+			    var i, key, length, object, value;
+			    object = {};
+			    i = -1;
+			    length = keys.length;
+			    while (++i < length) {
+			      key = keys[i];
+			      value = values[i];
+			      if (value == null) {
+			        continue;
+			      }
+			      if (object[key] != null) {
+			        if (!Array.isArray(object[key])) {
+			          object[key] = [object[key]];
+			        }
+			        object[key].push(value);
+			      } else {
+			        object[key] = value;
+			      }
+			    }
+			    return object;
+			  };
+			  P = {};
+			  P.Result = function(value, rest) {
+			    this.value = value;
+			    this.rest = rest;
+			  };
+			  P.Tagged = function(tag, value) {
+			    this.tag = tag;
+			    this.value = value;
+			  };
+			  P.tag = function(tag, parser) {
+			    return function(input) {
+			      var result, tagged;
+			      result = parser(input);
+			      if (result == null) {
+			        return;
+			      }
+			      tagged = new P.Tagged(tag, result.value);
+			      return new P.Result(tagged, result.rest);
+			    };
+			  };
+			  P.regex = function(regex) {
+			    return function(input) {
+			      var matches, result;
+			      matches = regex.exec(input);
+			      if (matches == null) {
+			        return;
+			      }
+			      result = matches[0];
+			      return new P.Result(result, input.slice(result.length));
+			    };
+			  };
+			  P.sequence = function() {
+			    var parsers;
+			    parsers = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+			    return function(input) {
+			      var i, length, parser, rest, result, values;
+			      i = -1;
+			      length = parsers.length;
+			      values = [];
+			      rest = input;
+			      while (++i < length) {
+			        parser = parsers[i];
+			        result = parser(rest);
+			        if (result == null) {
+			          return;
+			        }
+			        values.push(result.value);
+			        rest = result.rest;
+			      }
+			      return new P.Result(values, rest);
+			    };
+			  };
+			  P.pick = function() {
+			    var indexes, parsers;
+			    indexes = arguments[0], parsers = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+			    return function(input) {
+			      var array, result;
+			      result = P.sequence.apply(P, parsers)(input);
+			      if (result == null) {
+			        return;
+			      }
+			      array = result.value;
+			      result.value = array[indexes];
+			      return result;
+			    };
+			  };
+			  P.string = function(string) {
+			    var length;
+			    length = string.length;
+			    return function(input) {
+			      if (input.slice(0, length) === string) {
+			        return new P.Result(string, input.slice(length));
+			      }
+			    };
+			  };
+			  P.lazy = function(fn) {
+			    var cached;
+			    cached = null;
+			    return function(input) {
+			      if (cached == null) {
+			        cached = fn();
+			      }
+			      return cached(input);
+			    };
+			  };
+			  P.baseMany = function(parser, end, stringResult, atLeastOneResultRequired, input) {
+			    var endResult, parserResult, rest, results;
+			    rest = input;
+			    results = stringResult ? '' : [];
+			    while (true) {
+			      if (end != null) {
+			        endResult = end(rest);
+			        if (endResult != null) {
+			          break;
+			        }
+			      }
+			      parserResult = parser(rest);
+			      if (parserResult == null) {
+			        break;
+			      }
+			      if (stringResult) {
+			        results += parserResult.value;
+			      } else {
+			        results.push(parserResult.value);
+			      }
+			      rest = parserResult.rest;
+			    }
+			    if (atLeastOneResultRequired && results.length === 0) {
+			      return;
+			    }
+			    return new P.Result(results, rest);
+			  };
+			  P.many1 = function(parser) {
+			    return function(input) {
+			      return P.baseMany(parser, null, false, true, input);
+			    };
+			  };
+			  P.concatMany1Till = function(parser, end) {
+			    return function(input) {
+			      return P.baseMany(parser, end, true, true, input);
+			    };
+			  };
+			  P.firstChoice = function() {
+			    var parsers;
+			    parsers = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+			    return function(input) {
+			      var i, length, parser, result;
+			      i = -1;
+			      length = parsers.length;
+			      while (++i < length) {
+			        parser = parsers[i];
+			        result = parser(input);
+			        if (result != null) {
+			          return result;
+			        }
+			      }
+			    };
+			  };
+			  newParser = function(options) {
+			    var U;
+			    U = {};
+			    U.wildcard = P.tag('wildcard', P.string(options.wildcardChar));
+			    U.optional = P.tag('optional', P.pick(1, P.string(options.optionalSegmentStartChar), P.lazy(function() {
+			      return U.pattern;
+			    }), P.string(options.optionalSegmentEndChar)));
+			    U.name = P.regex(new RegExp("^[" + options.segmentNameCharset + "]+"));
+			    U.named = P.tag('named', P.pick(1, P.string(options.segmentNameStartChar), P.lazy(function() {
+			      return U.name;
+			    })));
+			    U.escapedChar = P.pick(1, P.string(options.escapeChar), P.regex(/^./));
+			    U["static"] = P.tag('static', P.concatMany1Till(P.firstChoice(P.lazy(function() {
+			      return U.escapedChar;
+			    }), P.regex(/^./)), P.firstChoice(P.string(options.segmentNameStartChar), P.string(options.optionalSegmentStartChar), P.string(options.optionalSegmentEndChar), U.wildcard)));
+			    U.token = P.lazy(function() {
+			      return P.firstChoice(U.wildcard, U.optional, U.named, U["static"]);
+			    });
+			    U.pattern = P.many1(P.lazy(function() {
+			      return U.token;
+			    }));
+			    return U;
+			  };
+			  defaultOptions = {
+			    escapeChar: '\\',
+			    segmentNameStartChar: ':',
+			    segmentValueCharset: 'a-zA-Z0-9-_~ %',
+			    segmentNameCharset: 'a-zA-Z0-9',
+			    optionalSegmentStartChar: '(',
+			    optionalSegmentEndChar: ')',
+			    wildcardChar: '*'
+			  };
+			  baseAstNodeToRegexString = function(astNode, segmentValueCharset) {
+			    if (Array.isArray(astNode)) {
+			      return stringConcatMap(astNode, function(node) {
+			        return baseAstNodeToRegexString(node, segmentValueCharset);
+			      });
+			    }
+			    switch (astNode.tag) {
+			      case 'wildcard':
+			        return '(.*?)';
+			      case 'named':
+			        return "([" + segmentValueCharset + "]+)";
+			      case 'static':
+			        return escapeForRegex(astNode.value);
+			      case 'optional':
+			        return '(?:' + baseAstNodeToRegexString(astNode.value, segmentValueCharset) + ')?';
+			    }
+			  };
+			  astNodeToRegexString = function(astNode, segmentValueCharset) {
+			    if (segmentValueCharset == null) {
+			      segmentValueCharset = defaultOptions.segmentValueCharset;
+			    }
+			    return '^' + baseAstNodeToRegexString(astNode, segmentValueCharset) + '$';
+			  };
+			  astNodeToNames = function(astNode) {
+			    if (Array.isArray(astNode)) {
+			      return concatMap(astNode, astNodeToNames);
+			    }
+			    switch (astNode.tag) {
+			      case 'wildcard':
+			        return ['_'];
+			      case 'named':
+			        return [astNode.value];
+			      case 'static':
+			        return [];
+			      case 'optional':
+			        return astNodeToNames(astNode.value);
+			    }
+			  };
+			  getParam = function(params, key, nextIndexes, sideEffects) {
+			    var index, maxIndex, result, value;
+			    if (sideEffects == null) {
+			      sideEffects = false;
+			    }
+			    value = params[key];
+			    if (value == null) {
+			      if (sideEffects) {
+			        throw new Error("no values provided for key `" + key + "`");
+			      } else {
+			        return;
+			      }
+			    }
+			    index = nextIndexes[key] || 0;
+			    maxIndex = Array.isArray(value) ? value.length - 1 : 0;
+			    if (index > maxIndex) {
+			      if (sideEffects) {
+			        throw new Error("too few values provided for key `" + key + "`");
+			      } else {
+			        return;
+			      }
+			    }
+			    result = Array.isArray(value) ? value[index] : value;
+			    if (sideEffects) {
+			      nextIndexes[key] = index + 1;
+			    }
+			    return result;
+			  };
+			  astNodeContainsSegmentsForProvidedParams = function(astNode, params, nextIndexes) {
+			    var i, length;
+			    if (Array.isArray(astNode)) {
+			      i = -1;
+			      length = astNode.length;
+			      while (++i < length) {
+			        if (astNodeContainsSegmentsForProvidedParams(astNode[i], params, nextIndexes)) {
+			          return true;
+			        }
+			      }
+			      return false;
+			    }
+			    switch (astNode.tag) {
+			      case 'wildcard':
+			        return getParam(params, '_', nextIndexes, false) != null;
+			      case 'named':
+			        return getParam(params, astNode.value, nextIndexes, false) != null;
+			      case 'static':
+			        return false;
+			      case 'optional':
+			        return astNodeContainsSegmentsForProvidedParams(astNode.value, params, nextIndexes);
+			    }
+			  };
+			  stringify = function(astNode, params, nextIndexes) {
+			    if (Array.isArray(astNode)) {
+			      return stringConcatMap(astNode, function(node) {
+			        return stringify(node, params, nextIndexes);
+			      });
+			    }
+			    switch (astNode.tag) {
+			      case 'wildcard':
+			        return getParam(params, '_', nextIndexes, true);
+			      case 'named':
+			        return getParam(params, astNode.value, nextIndexes, true);
+			      case 'static':
+			        return astNode.value;
+			      case 'optional':
+			        if (astNodeContainsSegmentsForProvidedParams(astNode.value, params, nextIndexes)) {
+			          return stringify(astNode.value, params, nextIndexes);
+			        } else {
+			          return '';
+			        }
+			    }
+			  };
+			  UrlPattern = function(arg1, arg2) {
+			    var groupCount, options, parsed, parser, withoutWhitespace;
+			    if (arg1 instanceof UrlPattern) {
+			      this.isRegex = arg1.isRegex;
+			      this.regex = arg1.regex;
+			      this.ast = arg1.ast;
+			      this.names = arg1.names;
+			      return;
+			    }
+			    this.isRegex = arg1 instanceof RegExp;
+			    if (!(('string' === typeof arg1) || this.isRegex)) {
+			      throw new TypeError('argument must be a regex or a string');
+			    }
+			    if (this.isRegex) {
+			      this.regex = arg1;
+			      if (arg2 != null) {
+			        if (!Array.isArray(arg2)) {
+			          throw new Error('if first argument is a regex the second argument may be an array of group names but you provided something else');
+			        }
+			        groupCount = regexGroupCount(this.regex);
+			        if (arg2.length !== groupCount) {
+			          throw new Error("regex contains " + groupCount + " groups but array of group names contains " + arg2.length);
+			        }
+			        this.names = arg2;
+			      }
+			      return;
+			    }
+			    if (arg1 === '') {
+			      throw new Error('argument must not be the empty string');
+			    }
+			    withoutWhitespace = arg1.replace(/\s+/g, '');
+			    if (withoutWhitespace !== arg1) {
+			      throw new Error('argument must not contain whitespace');
+			    }
+			    options = {
+			      escapeChar: (arg2 != null ? arg2.escapeChar : void 0) || defaultOptions.escapeChar,
+			      segmentNameStartChar: (arg2 != null ? arg2.segmentNameStartChar : void 0) || defaultOptions.segmentNameStartChar,
+			      segmentNameCharset: (arg2 != null ? arg2.segmentNameCharset : void 0) || defaultOptions.segmentNameCharset,
+			      segmentValueCharset: (arg2 != null ? arg2.segmentValueCharset : void 0) || defaultOptions.segmentValueCharset,
+			      optionalSegmentStartChar: (arg2 != null ? arg2.optionalSegmentStartChar : void 0) || defaultOptions.optionalSegmentStartChar,
+			      optionalSegmentEndChar: (arg2 != null ? arg2.optionalSegmentEndChar : void 0) || defaultOptions.optionalSegmentEndChar,
+			      wildcardChar: (arg2 != null ? arg2.wildcardChar : void 0) || defaultOptions.wildcardChar
+			    };
+			    parser = newParser(options);
+			    parsed = parser.pattern(arg1);
+			    if (parsed == null) {
+			      throw new Error("couldn't parse pattern");
+			    }
+			    if (parsed.rest !== '') {
+			      throw new Error("could only partially parse pattern");
+			    }
+			    this.ast = parsed.value;
+			    this.regex = new RegExp(astNodeToRegexString(this.ast, options.segmentValueCharset));
+			    this.names = astNodeToNames(this.ast);
+			  };
+			  UrlPattern.prototype.match = function(url) {
+			    var groups, match;
+			    match = this.regex.exec(url);
+			    if (match == null) {
+			      return null;
+			    }
+			    groups = match.slice(1);
+			    if (this.names) {
+			      return keysAndValuesToObject(this.names, groups);
+			    } else {
+			      return groups;
+			    }
+			  };
+			  UrlPattern.prototype.stringify = function(params) {
+			    if (params == null) {
+			      params = {};
+			    }
+			    if (this.isRegex) {
+			      throw new Error("can't stringify patterns generated from a regex");
+			    }
+			    if (params !== Object(params)) {
+			      throw new Error("argument must be an object or undefined");
+			    }
+			    return stringify(this.ast, params, {});
+			  };
+			  UrlPattern.escapeForRegex = escapeForRegex;
+			  UrlPattern.concatMap = concatMap;
+			  UrlPattern.stringConcatMap = stringConcatMap;
+			  UrlPattern.regexGroupCount = regexGroupCount;
+			  UrlPattern.keysAndValuesToObject = keysAndValuesToObject;
+			  UrlPattern.P = P;
+			  UrlPattern.newParser = newParser;
+			  UrlPattern.defaultOptions = defaultOptions;
+			  UrlPattern.astNodeToRegexString = astNodeToRegexString;
+			  UrlPattern.astNodeToNames = astNodeToNames;
+			  UrlPattern.getParam = getParam;
+			  UrlPattern.astNodeContainsSegmentsForProvidedParams = astNodeContainsSegmentsForProvidedParams;
+			  UrlPattern.stringify = stringify;
+			  return UrlPattern;
+			}); 
+		} (urlPattern$1, urlPattern$1.exports));
+		return urlPattern$1.exports;
+	}
+
+	var urlPatternExports = requireUrlPattern();
+	var UrlPattern = /*@__PURE__*/getDefaultExportFromCjs(urlPatternExports);
+
+	function e(e){let o,r=!1;return e?(o=function(e){let o=e.map((e=>n())),r=o.map((e=>e.promise));return o.promises=r,o.onComplete=t(Promise.all(r)),o}(e),r=!0):o=n(),o.timeout=function(e,n){let o;o=e?Promise.all(n.promises):n.promise;return function(e,r){let i,u=new Promise(((n,t)=>{i=setTimeout((()=>{n(r),Promise.resolve(o);}),e);}));return o.then((()=>clearTimeout(i))),n.onComplete=t(Promise.race([o,u])),n}}(r,o),o}function n(){let e,n;const o=new Promise(((t,o)=>{e=t,n=o;}));return {promise:o,done:e,cancel:n,onComplete:t(o)}}function t(e){return function(n){e.then((e=>n(e)));}}e.sequence=function(n,...t){const o=e(),r=[];const i=function*(e){for(const n of e)yield n;}(n);return function e(n,...t){n.done?o.done(r):n.value(...t).then((n=>{r.push(n),e(i.next(),...t,n);}));}(i.next(),...t),o},e.all=function(n,...t){const o=e(),r=[],i=n.map(((e,n)=>"function"==typeof e?e(...t).then((e=>r[n]=e)):e.then((e=>r[n]=e))));return Promise.all(i).then((()=>o.done(r))),o};
+
+	function historyController ( ) {
+	    
+	    let wait = null;
+
+	    function write ({state, title, url},  keepHistoryFlag ) {
+	            if ( keepHistoryFlag )   window.history.pushState    ( state, '', url );
+	            else                     window.history.replaceState ( state, '', url );
+	            const isFn = (typeof title === 'function');
+	            document.title = isFn ? title ( state.data ) : title;
+	        } // setState func.
+
+	        
+
+	    function read () {
+	                return window.location.pathname;
+	        } // readLocation func.
+	    
+
+
+	    function listen ( fn ) {
+	            onpopstate = function onPopState ( event ) {
+	                                let { PGID, url, data } = event.state;
+	                                if ( !wait )   wait = e ();
+	                                fn ( wait, {addressName:PGID, data, url} );
+	                                wait = null;
+	                            };
+	        } // listen func.
+
+
+
+	    function back ( steps=1 ) {
+	                    wait = e ().timeout ( 1500, 'expire' );   // history.back is asynch operation. It's applied when event 'popstate' is fired
+	                    window.history.back ( steps );
+	                    wait.onComplete ( d => { if ( d === 'expire')   wait = null; }); // prevent unclosed promises
+	                    return wait.promise            
+	        } // back func.
+
+
+
+	    function go ( steps=1 ) {
+	                    wait = e ().timeout ( 1500, 'expire' );   // history.go is asynch operation. It's applied when event 'popstate' is fired
+	                    window.history.go ( steps );
+	                    wait.onComplete ( d => { if ( d === 'expire')   wait = null; }); // prevent unclosed promises
+	                    return wait.promise
+	        } // go func.
+	    
+
+
+	    function destroy () {
+	            window.onpopstate = null;            
+	        } // destroy func.
+
+
+
+	    return {
+	              write
+	            , read
+	            , back
+	            , go
+
+	            , listen
+	            , destroy
+	        }
+	} // historyController func.
+
+	function _historyActions ( dependencies, state ) {
+
+	return function _historyActions ( task, {addressName, data, url}) {
+	            const 
+	                  { eBus, API } = dependencies
+	                , lastLocation  = state.lastLocation
+	                ;
+	            API.navigate ( addressName, data, true );  // last argument is 'historyEvent' flag.
+	            if ( lastLocation === url )   eBus.emit ( '_RELOAD', addressName, data, url );
+	            else                          eBus.emit ( '_CHANGE' , addressName, data, url );
+	            task.done ( addressName, data );
+	}} // _historyActions func.
+
+	function _locationChange ( dependencies, state ) {
+	return function _locationChange () {
+	            const { eBus, history, API } = dependencies;
+	            let 
+	                  reload = false
+	                , missingURL = true
+	                , usingRedirect = false
+	                ;
+	            const 
+	                  lastLocation = sessionStorage.getItem ( state.SSName )
+	                , url = history.read ()
+	                ;
+	            if ( lastLocation && lastLocation === url )   reload = true;
+	            missingURL = state.rt.every ( ({ name, pattern, title, redirect, data={} }) => {   // Search for address name
+	                                let res = pattern.match ( url );
+	                                if ( res ) {
+	                                            if ( redirect ) {
+	                                                    API.navigate ( redirect, data, true );
+	                                                    usingRedirect = true;
+	                                                    return false
+	                                                }
+	                                            sessionStorage.setItem ( state.SSName, url );
+	                                            state.lastLocation = url;
+	                                            state.lastAddress  = name;
+	                                            history.write ({ 
+	                                                              state : { PGID: name, url, data:res }
+	                                                            , url
+	                                                            , title
+	                                                        }, true );
+	                                                        
+	                                            if ( reload )    eBus.emit ( '_RELOAD', name, res, url );
+	                                            else             eBus.emit ( '_CHANGE',  name, res, url );
+	                                            return false   // Prevents duplicated data in the browser.history
+	                                    }
+	                                return true
+	                        });
+	            if ( missingURL ) {   // URL is not defined in the address list
+	                        if ( usingRedirect )   return
+	                        eBus.emit ( '_ERROR', { code: 404, message: `There is no defined address for path "${url}".` });
+	                        return 
+	                }
+	            state.lastRoute = url;
+	}} // _locationChange func.
+
+	function _setAddressRecord ( dependencies, state ) {
+	return function _setAddressRecord ({name, path, title, inHistory, redirect, data }) {
+	    
+	    if ( name == null      )   return null
+	    if ( path == null      )   return null
+	    if ( title == null     )   title = state.appName;
+	    if ( inHistory == null )   inHistory = false;
+
+	    const
+	          { UrlPattern } = dependencies 
+	        , pattern = new UrlPattern ( path )
+	        ;
+	    return { name, path, title, inHistory, pattern, redirect, data }
+	}} // _setAddressRecord func.
+
+	function createURL ( dependencies, state ) {
+	/**
+	 * @function createURL
+	 * @description Creates URL from address name and data
+	 * @param {string} addressName - Name of the address
+	 * @param {object|string} data - Data to be used for creating URL(optional)
+	 */
+	return function createURL ( addressName, data={} ) {
+	        const { routes } = state;
+	        if ( !routes[addressName] ) {  // If address is not registered
+	                    console.error ( `Address "${addressName}" is not registered` );
+	                    return null
+	            }
+	    
+	        const { pattern } = routes [ addressName ];
+
+	        try {
+	                const url = pattern.stringify ( data );
+	                return url
+	            }
+	        catch ( err ) {
+	                console.error ( `Data provided for address "${addressName}" is not correct.`);
+	                return null
+	            }
+	}} // createURL func.
+
+	function getCurrentAddress ( dependencies, state ) {
+	return function getCurrentAddress () {
+	        const 
+	                { lastAddress, lastLocation, routes } = state
+	                , { pattern } = routes[lastAddress]
+	                ;
+	        let data = pattern.match ( lastLocation );
+	        return [ state.lastAddress, data ]
+	}} // getCurrentAddress func.
+
+	function destroy ( dependencies, state ) {
+	return function destroy () {
+	        const { eBus, history, dead } = dependencies;
+	        state.isActive = false;
+	        eBus.off ();
+	        history.destroy ();
+	        sessionStorage.removeItem ( state.SSName );
+	        dependencies.API = {
+	                              on : dead
+	                            , navigate : dead
+	                            , destroy : dead
+	                        };
+	}} // destroy func.
+
+	function listActiveAddresses ( dependencies, state ) {
+	return function listActiveAddresses () {
+	    return state.rt.map ( r => r.name )
+	}} // listActiveAddresses func.
+
+	function listActiveRoutes ( dependencies, state ) {
+	return function listActiveRoutes () {
+	    const { rt } = state;
+	    return rt.map ( r => `${r.name} ---> ${r.path}`)
+	}} // listActiveRoutes func.
+
+	function navigate ( dependencies, state ) {
+	const { history, eBus } = dependencies;
+	return function navigate ( addressName, data={}, historyEvent=false ) {
+	    // historyEvent flag should be 'true' if 'navigate' is called from '_historyActions' or in _locationChange is detected 'reload' event.
+	    // This historyEvent flag prevents history line - forwards and backwards. 
+	    if ( !state.isActive ) {  // Don't use navigate before router.run()
+	                console.error ( 'Router is not active. Use router.run() to activate it.' );
+	                return
+	        }
+	    const { lastAddress, lastLocation, routes } = state;
+	    if ( !routes[addressName] ) {  // If address is not registered
+	                console.error ( `Address "${addressName}" is not registered` );
+	                eBus.emit ( '_ERROR', { code: 404, message: `Address "${addressName}" is not registered` });
+	                return  
+	        }
+
+	    let oldHistoryFlag = false;   // False means replaceState, true means pushState
+	    const { pattern, title, redirect, data:redirectData } = routes[addressName];
+	    if ( redirect ) {
+	                navigate ( redirect, redirectData );
+	                return
+	        }
+	    if ( lastAddress )   oldHistoryFlag = routes[ lastAddress ].inHistory;
+	    try {
+	                const url = pattern.stringify ( data );
+	                if ( url === lastLocation )   return   // If same path, do nothing
+	                state.lastLocation = url;
+	                sessionStorage.setItem ( state.SSName, url );
+	                state.lastAddress  = addressName;
+	                if ( historyEvent )   oldHistoryFlag = false;   // Ignore 'inHistory' flag if event is coming from history or refresh event
+	                history.write ({ 
+	                                  state : { PGID: addressName, url, data }
+	                                , url
+	                                , title
+	                            }, oldHistoryFlag ); 
+	        } 
+	    catch ( err ) {
+	                eBus.emit ( '_ERROR', { code: 400, message: `Data provided for address "${addressName}" is not correct. ${err}` });
+	                return
+	        }
+	}} // navigate func.
+
+	function setAddresses ( dependencies, state ) {
+	return function setAddresses ( list, cancelList=[] ) {
+	     const { _setAddressRecord } = dependencies.inAPI;
+	     list.forEach ( route => {
+	                const addressRecord = _setAddressRecord ( route );
+	                if ( !addressRecord )   return
+	                if ( cancelList.includes ( addressRecord.name ) )   return
+
+	                const name = addressRecord.name;
+	                state.rt.push ( addressRecord );
+	                state.routes[name] = addressRecord;
+	        });
+	      return dependencies.API
+	}} // setAddresses func.
+
+	function removeAddresses ( dependencies, state ) {
+	return function removeAddresses ( removeList ) {
+	    const { rt } = state;
+	    state.rt = rt.reduce (( res, item ) => {
+	                                        let { name } = item;
+	                                        if ( removeList.includes ( name )) {
+	                                                    delete state.routes [ name ];
+	                                                    return res
+	                                            }
+	                                        res.push ( item );
+	                                        return res
+	                            }, []);
+	    return dependencies.API
+	}} // removeAddresses func.
+
+	function run ( dependencies, state ) {
+	return function run () {
+	    const { inAPI, history } = dependencies;
+	    state.isActive = true;
+	    history.listen ( inAPI._historyActions );
+	    inAPI._locationChange ();
+	}} // run func.
+
+	var methods = {
+	                // inAPI methods
+	                  _historyActions
+	                , _locationChange
+	                , _setAddressRecord       // Individual address record preparation
+
+	                // API methods
+	                , createURL
+	                , getCurrentAddress
+	                , destroy
+	                , listAciveAddresses: listActiveAddresses
+	                , listActiveRoutes
+	                , navigate
+	                , removeAddresses
+	                , run
+	                , setAddresses
+	            };
+
+	function routeEmitter ( config ) {
+	  const 
+	      eBus  = e$1 ()
+	    , history = historyController ()
+	    , { appName, sessionStorageKey } = config || {}
+	    , state = {
+	                  lastLocation : ''   // Last url
+	                , lastAddress : null  // Last address name
+	                , SSName : '_routeEmmiterLastLocation' // Session Storage(SS) key for last location
+	                , appName : 'App Name' // Used as a title for addresses without title property
+	                , rt : []      // Addresses as a list
+	                , routes : {}  // Addresses definitions
+	                , isActive : false  // If router is running - true, else - false
+	            }
+	    , dead = () => console.error ( 'Router was destroyed' )
+	    , dependencies = { UrlPattern, eBus, history, dead }
+	    , APImethods = {}
+	    , inAPI = {}
+	    ;
+	    
+	  if ( appName           && ( typeof appName === 'string'           ))   state.appName = appName;
+	  if ( sessionStorageKey && ( typeof sessionStorageKey === 'string' ))   state.SSName = sessionStorageKey;  
+
+	  Object.entries ( methods ).forEach ( ([name,fn]) => {
+	                if ( name.startsWith ( '_' ) )   inAPI[name]      = fn ( dependencies, state );
+	                else                             APImethods[name] = fn ( dependencies, state );
+	      });
+	  dependencies.inAPI = inAPI;
+	  dependencies.API = {
+	              // Event related methods
+	                onChange  : fn => { eBus.on ( '_CHANGE',  fn ); return dependencies.API }
+	              , onError   : fn => { eBus.on ( '_ERROR',   fn ); return dependencies.API }
+	              , onReload  : fn => { eBus.on ( '_RELOAD', fn ); return dependencies.API }
+	              // History related methods
+	              , back      : steps => history.back ( steps )
+	              , forward   : steps => history.go   ( steps )
+	              // Router related methods
+	              , ...APImethods
+	      };
+	  return dependencies.API
+	}  // ReactEmmiter func.
+
+	return routeEmitter;
+
+}));
