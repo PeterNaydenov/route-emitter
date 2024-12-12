@@ -13,9 +13,13 @@ import UrlPattern from 'url-pattern'          // Docs: https://github.com/snd/ur
 import historyController from './historyController.js' // Browser window.history controller
 import methods from './methods/index.js'               // Library methods
 
-
-
 /**
+
+ */
+
+
+/*** 
+ * 
  * @typedef {Object} API
  * @property {function(function):API} onChange - Register a callback function for "change" signal
  * @property {function(function):API} onReload - Register a callback function for "refresh" signal
