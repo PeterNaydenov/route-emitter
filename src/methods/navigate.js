@@ -1,5 +1,15 @@
 function navigate ( dependencies, state ) {
 const { history, eBus } = dependencies;
+/**
+ *  @function navigate
+ *  @description Navigate to address by name
+ *  @param {string} addressName - name of address to navigate to
+ *  @param {object} [data={}] - data to use for path generation
+ *  @param {boolean} [historyEvent=false] - flag to indicate if this navigate is called from '_historyActions'
+ *                                          or in _locationChange is detected 'reload' event. This flag prevents
+ *                                          history line - forwards and backwards.
+ *  @return {void}
+ */
 return function navigate ( addressName, data={}, historyEvent=false ) {
     // historyEvent flag should be 'true' if 'navigate' is called from '_historyActions' or in _locationChange is detected 'reload' event.
     // This historyEvent flag prevents history line - forwards and backwards. 

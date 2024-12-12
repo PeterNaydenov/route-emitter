@@ -1,4 +1,9 @@
 function run ( dependencies, state ) {
+/**
+ * @function run
+ * @description  Run the router
+ * @returns {void}
+ */
 return function run () {
     const { inAPI, history } = dependencies;
     state.isActive = true

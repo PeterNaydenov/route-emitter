@@ -1,5 +1,13 @@
 'use strict'
 function setAddresses ( dependencies, state ) {
+/**
+ * @function setAddresses
+ * @description Registers list of addresses
+ * @param {array} list - List of addresses
+ * @param {array} cancelList - List of addresses to cancel
+ * @returns {Promise} 
+ *   
+ */
 return function setAddresses ( list, cancelList=[] ) {
      const { _setAddressRecord } = dependencies.inAPI;
      list.forEach ( route => {
