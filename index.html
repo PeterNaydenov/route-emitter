@@ -4,10 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>Route Emitter Playground</title>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="src/main.js"></script>
+    <script type="module">
+        import routeEmitter from './src/main.js'
+        const config = { appName: 'My App', sessionStorageKey: 'myAppLastLocation' }
+        const router = routeEmitter ( config )
+
+        router.setAddresses ( [
+                      {
+                          name: 'home'
+                        , path: '/well'  // Change path and see the result in the console
+                        , inHistory: true
+                      }
+            ])
+        router.run ()
+
+        const [ addressName, data ] = router.getCurrentAddress() // No current address available
+        console.log ( addressName ) 
+        console.log ( addressName === null ) // true
+
+    </script>
   </body>
 </html>

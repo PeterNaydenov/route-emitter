@@ -2,14 +2,20 @@
 
 
 
+### 2.2.5 (2024-12-12)
+- [x] Fix: Method `getCurrentAddress` breaks if the URL is not in the address list;
+
+
+
 ### 2.2.4 (2024-12-12)
 - [x] Types updates
-
+- [ ] Bug: Method `getCurrentAddress` breaks if the URL is not in the address list;
 
 
 ### 2.2.3 (2024-12-12)
 - [x] Generate d.ts files on build;
 - [x] Compression of build files was removed;
+- [ ] Bug: Method `getCurrentAddress` breaks if the URL is not in the address list;
 
 
 

@@ -1,4 +1,7 @@
 export default routeEmitter;
+/**
+ * *
+ */
 export type API = {
     /**
      * - Register a callback function for "change" signal
@@ -68,6 +71,10 @@ export type Address = {
     redirect?: string;
 };
 /**
+
+ */
+/***
+ *
  * @typedef {Object} API
  * @property {function(function):API} onChange - Register a callback function for "change" signal
  * @property {function(function):API} onReload - Register a callback function for "refresh" signal

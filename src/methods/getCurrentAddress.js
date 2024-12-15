@@ -8,7 +8,7 @@ function getCurrentAddress ( dependencies, state ) {
 return function getCurrentAddress () {
         const 
                 { lastAddress, lastLocation, routes } = state
-                , { pattern } = routes[lastAddress]
+                , { pattern } = lastAddress ? routes[lastAddress] : { pattern: 'null' }
                 ;
         let data = pattern.match ( lastLocation )
         return [ state.lastAddress, data ]
