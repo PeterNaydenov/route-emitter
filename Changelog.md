@@ -2,6 +2,11 @@
 
 
 
+### 2.2.6 (2024-12-16)
+- [x] Dependency update. @peter.naydenov/notice - v. 2.3.2
+- [x] Dependency update. ask-for-promise - v. 2.0.5
+
+
 ### 2.2.5 (2024-12-12)
 - [x] Fix: Method `getCurrentAddress` breaks if the URL is not in the address list;
 

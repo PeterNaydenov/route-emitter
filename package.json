@@ -29,14 +29,14 @@
     "url": "https://github.com/PeterNaydenov/route-emitter.git"
   },
   "dependencies": {
-    "@peter.naydenov/notice": "^2.3.1",
-    "ask-for-promise": "^2.0.3",
+    "@peter.naydenov/notice": "^2.3.2",
+    "ask-for-promise": "^2.0.5",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "@peter.naydenov/visual-controller-for-react": "^2.2.4",
-    "@rollup/plugin-commonjs": "^28.0.1",
-    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.1",
