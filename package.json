@@ -1,7 +1,7 @@
 {
   "name": "@peter.naydenov/route-emitter",
   "description": "Changes in URL are converted in events according routes definition list",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "license": "MIT",
   "author": "Peter Naydenov",
   "main": "src/main.js",
