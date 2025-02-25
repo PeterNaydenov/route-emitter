@@ -2,6 +2,11 @@
 
 
 
+### 2.2.8 ( 2025-02-25)
+- [x] Dependency update. @peter.naydenov/notice - v. 2.4.0
+
+
+
 ### 2.2.6 (2024-12-16)
 - [x] Dependency update. @peter.naydenov/notice - v. 2.3.2
 - [x] Dependency update. ask-for-promise - v. 2.0.5
