@@ -44,7 +44,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "cypress": "^14.3.0",
     "typescript": "^5.8.3",
-    "vite": "^6.2.6"
+    "vite": "^6.3.2"
   },
   "keywords": [
     "micro",
