@@ -29,7 +29,7 @@
     "url": "https://github.com/PeterNaydenov/route-emitter.git"
   },
   "dependencies": {
-    "@peter.naydenov/notice": "^2.4.0",
+    "@peter.naydenov/notice": "^2.4.1",
     "ask-for-promise": "^3.0.1",
     "url-pattern": "^1.0.3"
   },
