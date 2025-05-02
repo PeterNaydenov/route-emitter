@@ -2,8 +2,14 @@
 
 
 
+### 2.2.10 ( 2025-05-02)
+- [x] Build was processed;
+
+
+
 ### 2.2.9 ( 2025-05-02)
 - [x] Dependency update. @peter.naydenov/notice - v. 2.4.1
+- [ ] Build was forgotten;
 
 
 
