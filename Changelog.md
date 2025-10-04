@@ -1,5 +1,8 @@
 # Release History
 
+### 2.2.11 ( 2025-10-04)
+- [x] Dependency update. Ask-for-promise - v. 3.0.2
+
 
 
 ### 2.2.10 ( 2025-05-02)
