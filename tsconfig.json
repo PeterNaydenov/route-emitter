@@ -2,9 +2,11 @@
     "include": ["./src/**/*"],
     "compilerOptions": {
       "allowJs": true,
+      "rootDir": "src",
       "declaration": true,
       "emitDeclarationOnly": true,
       "outDir": "types",
-      "declarationMap": true
+      "declarationMap": true,
+      "skipLibCheck": true
     }
   }
