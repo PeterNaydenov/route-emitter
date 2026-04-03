@@ -3,43 +3,43 @@ import t from "url-pattern";
 import n from "ask-for-promise";
 //#region src/historyController.js
 function r() {
-	let e = null;
-	function t({ state: e, title: t, url: n }, r) {
+	let e = null, t = null;
+	function r({ state: e, title: t, url: n }, r) {
 		r ? window.history.pushState(e, "", n) : window.history.replaceState(e, "", n), document.title = typeof t == "function" ? t(e.data) : t;
 	}
-	function r() {
+	function i() {
 		return window.location.pathname;
 	}
-	function i(t) {
-		onpopstate = function(r) {
-			let { PGID: i, url: a, data: o } = r.state;
-			e ||= n(), t(e, {
+	function a(r) {
+		t = function(t) {
+			let { PGID: i, url: a, data: o } = t.state;
+			e ||= n(), r(e, {
 				addressName: i,
 				data: o,
 				url: a
 			}), e = null;
-		};
+		}, window.addEventListener("popstate", t);
 	}
-	function a(t = 1) {
+	function o(t = 1) {
 		return e = n().timeout(1500, "expire"), window.history.back(t), e.onComplete((t) => {
 			t === "expire" && (e = null);
 		}), e.promise;
 	}
-	function o(t = 1) {
+	function s(t = 1) {
 		return e = n().timeout(1500, "expire"), window.history.go(t), e.onComplete((t) => {
 			t === "expire" && (e = null);
 		}), e.promise;
 	}
-	function s() {
-		window.onpopstate = null;
+	function c() {
+		t && window.removeEventListener("popstate", t);
 	}
 	return {
-		write: t,
-		read: r,
-		back: a,
-		go: o,
-		listen: i,
-		destroy: s
+		write: r,
+		read: i,
+		back: o,
+		go: s,
+		listen: a,
+		destroy: c
 	};
 }
 //#endregion
