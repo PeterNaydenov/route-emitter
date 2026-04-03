@@ -23,7 +23,7 @@
     "postbuild": "tsc -p tsconfig.json",
     "preview": "vite preview",
     "test": "vitest run",
-    "coverage": "vitest run --coverage"
+    "cover": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
