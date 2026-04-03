@@ -9,7 +9,12 @@ export default defineConfig({
     setupFiles: ['./test/setup.js'],
     testTimeout: 10000,
     hookTimeout: 10000,
-    include: ['test/**/*.test.js']
+    include: ['test/**/*.test.js'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      include: ['src/**/*.js']
+    }
   },
   build: {
     lib: {
