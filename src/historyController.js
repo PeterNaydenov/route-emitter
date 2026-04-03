@@ -10,6 +10,7 @@ import askForPromise from 'ask-for-promise' // Docs: https://github.com/PeterNay
 function historyController ( ) {
     
     let wait = null;
+    let onPopState = null;
 
     function write ({state, title, url},  keepHistoryFlag ) {
             if ( keepHistoryFlag )   window.history.pushState    ( state, '', url )
@@ -17,7 +18,6 @@ function historyController ( ) {
             const isFn = (typeof title === 'function');
             document.title = isFn ? title ( state.data ) : title
         } // setState func.
-
         
 
     function read () {
@@ -27,12 +27,13 @@ function historyController ( ) {
 
 
     function listen ( fn ) {
-            onpopstate = function onPopState ( event ) {
+            onPopState = function onPopState ( event ) {
                                 let { PGID, url, data } = event.state;
                                 if ( !wait )   wait = askForPromise ()
                                 fn ( wait, {addressName:PGID, data, url} )
                                 wait = null
                             }
+            window.addEventListener ( 'popstate', onPopState )
         } // listen func.
 
 
@@ -56,7 +57,7 @@ function historyController ( ) {
 
 
     function destroy () {
-            window.onpopstate = null            
+            if ( onPopState )   window.removeEventListener ( 'popstate', onPopState )            
         } // destroy func.
 
 
