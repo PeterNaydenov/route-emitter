@@ -2,6 +2,11 @@
 
 
 
+### 2.2.13 ( 2026-05-01)
+- [x] Dependency update. ask-for-promise - v. 3.1.1
+
+
+
 ### 2.2.12 ( 2026-04-03)
 - [x] Dependency update. @peter.naydenov/notice - v. 2.4.2;
 - [x] Dev dependency update. Typescript v.6;
