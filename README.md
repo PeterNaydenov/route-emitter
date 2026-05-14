@@ -23,6 +23,7 @@ Provide an list of "**application addresses**"(in brief: *'address list'*) and `
 - If url is not recognized, router will signal an `error`;
 - Signal `reload` means that requested url is the same as the current url;
 - Calling navigate with address and wrong set of data will generate signal `error`;
+- Routes are matched **top to bottom** in the address list. The first matching route wins, so place more specific routes before generic/catch-all ones;
 
 
 
