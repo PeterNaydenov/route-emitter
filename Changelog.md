@@ -2,6 +2,12 @@
 
 
 
+### 2.2.14 ( 2026-05-15)
+- [x] Last external dependencies was removed;
+- [x] Dependency change: Using now @peter.naydenov/url-pattern instead of url-pattern;
+
+
+
 ### 2.2.13 ( 2026-05-01)
 - [x] Dependency update. ask-for-promise - v. 3.1.1
 
