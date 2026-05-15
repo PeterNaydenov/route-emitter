@@ -7,8 +7,8 @@
  * 
  */
 
-import notice from '@peter.naydenov/notice'   // Docs: https://github.com/PeterNaydenov/notice
-import UrlPattern from 'url-pattern'          // Docs: https://github.com/snd/url-pattern
+import notice from '@peter.naydenov/notice'             // Docs: https://github.com/PeterNaydenov/notice
+import UrlPattern from '@peter.naydenov/url-pattern'    // Docs: https://github.com/PeterNaydenov/url-pattern
 
 import historyController from './historyController.js' // Browser window.history controller
 import methods from './methods/index.js'               // Library methods
