@@ -57,5 +57,9 @@
     "MFE",
     "router",
     "emitter"
-  ]
+  ],
+  "allowScripts": {
+    "fsevents@2.3.2": true,
+    "fsevents@2.3.3": true
+  }
 }
