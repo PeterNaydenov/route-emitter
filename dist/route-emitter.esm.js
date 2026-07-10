@@ -1,6 +1,6 @@
 import e from "@peter.naydenov/notice";
 import t from "ask-for-promise";
-//#region node_modules/@peter.naydenov/url-pattern/dist/url-pattern.es.js
+//#region node_modules/@peter.naydenov/url-pattern/src/main.js
 var n = {
 	escapeChar: "\\",
 	segmentNameStartChar: ":",
@@ -257,10 +257,10 @@ var n = {
 	stringify(e) {
 		return p(this.compiled, e);
 	}
-}, h = (e, t = {}) => new m(e, t);
+};
 //#endregion
 //#region src/historyController.js
-function g() {
+function h() {
 	let e = null, n = null;
 	function r({ state: e, title: t, url: n }, r) {
 		r ? window.history.pushState(e, "", n) : window.history.replaceState(e, "", n), document.title = typeof t == "function" ? t(e.data) : t;
@@ -302,7 +302,7 @@ function g() {
 }
 //#endregion
 //#region src/methods/_historyActions.js
-function _(e, t) {
+function g(e, t) {
 	return function(n, { addressName: r, data: i, url: a }) {
 		let { eBus: o, API: s } = e, c = t.lastLocation;
 		s.navigate(r, i, !0), c === a ? o.emit("_RELOAD", r, i, a) : o.emit("_CHANGE", r, i, a), n.done(r, i);
@@ -310,7 +310,7 @@ function _(e, t) {
 }
 //#endregion
 //#region src/methods/_locationChange.js
-function v(e, t) {
+function _(e, t) {
 	return function() {
 		let { eBus: n, history: r, API: i } = e, a = !1, o = !0, s = !1, c = sessionStorage.getItem(t.SSName), l = r.read();
 		if (c && c === l && (a = !0), o = t.rt.every(({ name: e, pattern: o, title: c, redirect: u, data: d = {} }) => {
@@ -337,7 +337,7 @@ function v(e, t) {
 }
 //#endregion
 //#region src/methods/_setAddressRecord.js
-function y(e, t) {
+function v(e, t) {
 	return function({ name: n, path: r, title: i, inHistory: a, redirect: o, data: s }) {
 		if (n == null || r == null) return null;
 		i ??= t.appName, a ??= !1;
@@ -355,7 +355,7 @@ function y(e, t) {
 }
 //#endregion
 //#region src/methods/createURL.js
-function b(e, t) {
+function y(e, t) {
 	return function(e, n = {}) {
 		let { routes: r } = t;
 		if (!r[e]) return console.error(`Address "${e}" is not registered`), null;
@@ -369,7 +369,7 @@ function b(e, t) {
 }
 //#endregion
 //#region src/methods/getCurrentAddress.js
-function x(e, t) {
+function b(e, t) {
 	return function() {
 		let { lastAddress: e, lastLocation: n, routes: r } = t, { pattern: i } = e ? r[e] : { pattern: "null" }, a = i.match(n);
 		return [t.lastAddress, a];
@@ -377,7 +377,7 @@ function x(e, t) {
 }
 //#endregion
 //#region src/methods/destroy.js
-function S(e, t) {
+function x(e, t) {
 	return function() {
 		let { eBus: n, history: r, dead: i } = e;
 		t.isActive = !1, n.off(), r.destroy(), sessionStorage.removeItem(t.SSName), e.API = {
@@ -389,14 +389,14 @@ function S(e, t) {
 }
 //#endregion
 //#region src/methods/listActiveAddresses.js
-function C(e, t) {
+function S(e, t) {
 	return function() {
 		return t.rt.map((e) => e.name);
 	};
 }
 //#endregion
 //#region src/methods/listActiveRoutes.js
-function w(e, t) {
+function C(e, t) {
 	return function() {
 		let { rt: e } = t;
 		return e.map((e) => `${e.name} ---> ${e.path}`);
@@ -404,7 +404,7 @@ function w(e, t) {
 }
 //#endregion
 //#region src/methods/navigate.js
-function T(e, t) {
+function w(e, t) {
 	let { history: n, eBus: r } = e;
 	return function e(i, a = {}, o = !1) {
 		if (!t.isActive) {
@@ -448,7 +448,7 @@ function T(e, t) {
 }
 //#endregion
 //#region src/methods/setAddresses.js
-function E(e, t) {
+function T(e, t) {
 	return function(n, r = []) {
 		let { _setAddressRecord: i } = e.inAPI;
 		return n.forEach((e) => {
@@ -461,7 +461,7 @@ function E(e, t) {
 }
 //#endregion
 //#region src/methods/removeAddresses.js
-function D(e, t) {
+function E(e, t) {
 	return function(n) {
 		let { rt: r } = t;
 		return t.rt = r.reduce((e, r) => {
@@ -472,7 +472,7 @@ function D(e, t) {
 }
 //#endregion
 //#region src/methods/run.js
-function O(e, t) {
+function D(e, t) {
 	return function() {
 		let { inAPI: n, history: r } = e;
 		t.isActive = !0, r.listen(n._historyActions), n._locationChange();
@@ -480,24 +480,24 @@ function O(e, t) {
 }
 //#endregion
 //#region src/methods/index.js
-var k = {
-	_historyActions: _,
-	_locationChange: v,
-	_setAddressRecord: y,
-	createURL: b,
-	getCurrentAddress: x,
-	destroy: S,
-	listAciveAddresses: C,
-	listActiveRoutes: w,
-	navigate: T,
-	removeAddresses: D,
-	run: O,
-	setAddresses: E
+var O = {
+	_historyActions: g,
+	_locationChange: _,
+	_setAddressRecord: v,
+	createURL: y,
+	getCurrentAddress: b,
+	destroy: x,
+	listAciveAddresses: S,
+	listActiveRoutes: C,
+	navigate: w,
+	removeAddresses: E,
+	run: D,
+	setAddresses: T
 };
 //#endregion
 //#region src/main.js
-function A(t) {
-	let n = e(), r = g(), { appName: i, sessionStorageKey: a } = t || {}, o = {
+function k(t) {
+	let n = e(), r = h(), { appName: i, sessionStorageKey: a } = t || {}, o = {
 		lastLocation: "",
 		lastAddress: null,
 		SSName: "_routeEmmiterLastLocation",
@@ -506,12 +506,12 @@ function A(t) {
 		routes: {},
 		isActive: !1
 	}, s = {
-		UrlPattern: h,
+		UrlPattern: m,
 		eBus: n,
 		history: r,
 		dead: () => console.error("Router was destroyed")
 	}, c = {}, l = {};
-	return i && typeof i == "string" && (o.appName = i), a && typeof a == "string" && (o.SSName = a), Object.entries(k).forEach(([e, t]) => {
+	return i && typeof i == "string" && (o.appName = i), a && typeof a == "string" && (o.SSName = a), Object.entries(O).forEach(([e, t]) => {
 		e.startsWith("_") ? l[e] = t(s, o) : c[e] = t(s, o);
 	}), s.inAPI = l, s.API = {
 		onChange: (e) => (n.on("_CHANGE", e), s.API),
@@ -523,4 +523,4 @@ function A(t) {
 	}, s.API;
 }
 //#endregion
-export { A as default };
+export { k as default };
