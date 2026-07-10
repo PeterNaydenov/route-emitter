@@ -1,9 +1,267 @@
 import e from "@peter.naydenov/notice";
-import t from "url-pattern";
-import n from "ask-for-promise";
+import t from "ask-for-promise";
+//#region node_modules/@peter.naydenov/url-pattern/dist/url-pattern.es.js
+var n = {
+	escapeChar: "\\",
+	segmentNameStartChar: ":",
+	segmentNameEndChar: void 0,
+	segmentNameCharset: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_",
+	segmentValueCharset: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_~ %",
+	optionalSegmentStartChar: "(",
+	optionalSegmentEndChar: ")",
+	wildcardChar: "*",
+	wildcardName: "_"
+}, r = (e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), i = (e) => {
+	let t = e.replace(/\\/g, "\\\\");
+	return t = t.replace(/\]/g, "\\]"), t = t.replace(/\^/g, "\\^"), t = t.replace(/-/g, "\\-"), t;
+}, a = (e = {}) => ({
+	...n,
+	...e
+}), o = (e, t, n) => {
+	let r = [
+		n.escapeChar,
+		n.optionalSegmentStartChar,
+		n.optionalSegmentEndChar,
+		n.wildcardChar,
+		n.segmentNameStartChar
+	], i = e.length;
+	for (let n = 0; n < r.length; n++) {
+		let a = r[n];
+		if (!a) continue;
+		let o = e.indexOf(a, t);
+		o !== -1 && o < i && (i = o);
+	}
+	return i;
+}, s = (e, t) => {
+	let n = [], a = 0, s = !1, c = 0, l = 0;
+	for (; a < e.length;) {
+		let u = e[a];
+		if (u === t.escapeChar) {
+			if (a + 1 >= e.length) throw Error(`Invalid pattern: '\\' at position ${a} has nothing to escape`);
+			let t = e[a + 1];
+			if ("^$.*+?()[]{}|\\".includes(t)) {
+				n.push({
+					type: "literal",
+					name: t,
+					regex: r(t),
+					optional: s,
+					optionalGroupId: s ? c : void 0
+				}), a += 2;
+				continue;
+			} else {
+				n.push({
+					type: "literal",
+					name: "\\",
+					regex: "\\\\",
+					optional: s,
+					optionalGroupId: s ? c : void 0
+				}), a += 1;
+				continue;
+			}
+		}
+		if (u === t.optionalSegmentStartChar) {
+			s = !0, c++, l++, a++;
+			continue;
+		}
+		if (u === t.optionalSegmentEndChar) {
+			if (l === 0) throw Error(`Invalid pattern: unmatched '${u}' at position ${a}`);
+			s = !1, l--, a++;
+			continue;
+		}
+		if (u === t.wildcardChar) {
+			n.push({
+				type: "wildcard",
+				name: t.wildcardName,
+				regex: ".*",
+				optional: s,
+				optionalGroupId: s ? c : void 0
+			}), a++;
+			continue;
+		}
+		if (u === t.segmentNameStartChar && a + 1 < e.length) {
+			let r = e.slice(a + 1), o = 0, l = t.segmentNameCharset || "", d = t.segmentNameEndChar;
+			for (let e = 0; e < r.length && !(d && r[e] === d || !l.includes(r[e])); e++) o = e + 1;
+			let f = r.slice(0, o), p = !!(d && r[o] === d);
+			if (f.length > 0) {
+				let e = `([${i(t.segmentValueCharset || "")}]+)`;
+				n.push({
+					type: "named",
+					name: f,
+					regex: e,
+					optional: s,
+					optionalGroupId: s ? c : void 0
+				}), a += 1 + o + +!!p;
+				continue;
+			}
+			throw Error(`Invalid pattern: '${u}' at position ${a} has no segment name`);
+		}
+		let d = o(e, a, t);
+		if (d > a) {
+			let t = e.slice(a, d);
+			n.push({
+				type: "literal",
+				name: t,
+				regex: r(t),
+				optional: s,
+				optionalGroupId: s ? c : void 0
+			}), a = d;
+			continue;
+		}
+		throw Error(`Invalid pattern: '${u}' at position ${a} has no segment name`);
+	}
+	if (l !== 0) throw Error(`Invalid pattern: unclosed '${t.optionalSegmentStartChar}'`);
+	return n;
+}, c = (e) => !!(e == null || e === "" || typeof e == "number" && Number.isNaN(e) || Array.isArray(e) && e.length === 0), l = (e, t) => {
+	let n = "^", r = 0, i = [], a = 0;
+	for (; a < e.length;) {
+		let o = e[a];
+		if (o.optional) {
+			let s = "", c = a, l = o.optionalGroupId;
+			for (; c < e.length && e[c].optional && e[c].optionalGroupId === l;) {
+				let n = e[c];
+				n.type === "wildcard" ? (s += "(.*)", i.push({
+					name: t.wildcardName,
+					index: r,
+					type: "wildcard"
+				}), r++) : n.type === "named" ? (s += n.regex, i.push({
+					name: n.name,
+					index: r,
+					type: "named"
+				}), r++) : s += n.regex, c++;
+			}
+			n += `(?:${s})?`, a = c;
+			continue;
+		}
+		o.type === "wildcard" ? (n += "(.*)", i.push({
+			name: t.wildcardName,
+			index: r,
+			type: "wildcard"
+		}), r++) : o.type === "named" ? (n += o.regex, i.push({
+			name: o.name,
+			index: r,
+			type: "named"
+		}), r++) : n += o.regex, a++;
+	}
+	return n += "$", {
+		regex: n,
+		segmentNames: i
+	};
+}, u = (e, t = {}) => {
+	let n = a(t), r = s(e, n), { regex: i, segmentNames: o } = l(r, n);
+	return {
+		regex: i,
+		regexObj: new RegExp(i),
+		segments: r,
+		segmentNames: o,
+		options: n,
+		isRegex: !1,
+		pattern: e
+	};
+}, d = (e, t = []) => {
+	let r = e.flags.replace(/[gy]/g, ""), i = r === e.flags ? e : new RegExp(e.source, r);
+	return {
+		regex: e.source,
+		regexObj: i,
+		segments: [],
+		segmentNames: t.map((e, t) => ({
+			name: e,
+			index: t,
+			type: "named"
+		})),
+		options: n,
+		isRegex: !0,
+		keys: t
+	};
+}, f = (e, t) => {
+	if (typeof t != "string") throw TypeError(`pattern.match() requires a string, got ${typeof t}`);
+	let n = e.regexObj.exec(t);
+	if (!n) return null;
+	if (e.isRegex) {
+		if (e.keys && e.keys.length > 0) {
+			let t = {};
+			return e.keys.forEach((e, r) => {
+				let i = n[r + 1];
+				i !== void 0 && (t[e] = i);
+			}), t;
+		}
+		return n.slice(1);
+	}
+	let r = {}, i = /* @__PURE__ */ new Set(), a = /* @__PURE__ */ new Set();
+	for (let t of e.segmentNames) t.type === "wildcard" && a.add(t.name);
+	for (let t = 0; t < e.segmentNames.length; t++) {
+		let a = e.segmentNames[t], o = a.index + 1 in n ? n[a.index + 1] : "", s = o === void 0 ? "" : o;
+		i.has(a.name) ? (Array.isArray(r[a.name]) || (r[a.name] = [r[a.name]]), r[a.name].push(s)) : (i.add(a.name), r[a.name] = s);
+	}
+	for (let e in r) {
+		let t = r[e];
+		if (Array.isArray(t)) {
+			let n = t.filter((t) => t !== "" || a.has(e));
+			n.length === 0 ? delete r[e] : r[e] = n;
+		} else t === "" && !a.has(e) && delete r[e];
+	}
+	return r;
+}, p = (e, t = {}) => {
+	if (e.isRegex) throw Error("Cannot stringify a pattern created from regex");
+	let n = "", r = 0;
+	for (; r < e.segments.length;) {
+		let i = e.segments[r];
+		if (i.optional) {
+			let a = "", o = r, s = i.optionalGroupId;
+			for (; o < e.segments.length && e.segments[o].optional && e.segments[o].optionalGroupId === s;) {
+				let n = e.segments[o];
+				if (n.type === "literal") a += n.name;
+				else if (n.type === "named") {
+					let e = t[n.name];
+					if (c(e)) {
+						a = "";
+						break;
+					}
+					a += Array.isArray(e) ? e.join("/") : e;
+				} else if (n.type === "wildcard") {
+					let n = t[e.options.wildcardName];
+					if (c(n)) {
+						a = "";
+						break;
+					}
+					a += Array.isArray(n) ? n.join("/") : n;
+				}
+				o++;
+			}
+			a !== "" && (n += a), r === o ? r++ : r = o;
+			continue;
+		}
+		if (i.type === "literal") n += i.name;
+		else if (i.type === "named") {
+			let e = t[i.name];
+			if (c(e)) throw Error(`Missing required value for segment: ${i.name}`);
+			n += Array.isArray(e) ? e.join("/") : e;
+		} else if (i.type === "wildcard") {
+			let r = t[e.options.wildcardName];
+			if (r == null) throw Error("Missing required wildcard value");
+			n += Array.isArray(r) ? r.join("/") : r;
+		}
+		r++;
+	}
+	return n;
+}, m = class {
+	constructor(e, t = {}) {
+		if (e instanceof RegExp) {
+			let n = Array.isArray(t) ? t : [];
+			this.compiled = d(e, n);
+		} else this.compiled = u(e, t);
+		Object.freeze(this.compiled.options), Object.freeze(this.compiled);
+	}
+	match(e) {
+		return f(this.compiled, e);
+	}
+	stringify(e) {
+		return p(this.compiled, e);
+	}
+}, h = (e, t = {}) => new m(e, t);
+//#endregion
 //#region src/historyController.js
-function r() {
-	let e = null, t = null;
+function g() {
+	let e = null, n = null;
 	function r({ state: e, title: t, url: n }, r) {
 		r ? window.history.pushState(e, "", n) : window.history.replaceState(e, "", n), document.title = typeof t == "function" ? t(e.data) : t;
 	}
@@ -11,27 +269,27 @@ function r() {
 		return window.location.pathname;
 	}
 	function a(r) {
-		t = function(t) {
-			let { PGID: i, url: a, data: o } = t.state;
-			e ||= n(), r(e, {
+		n = function(n) {
+			let { PGID: i, url: a, data: o } = n.state;
+			e ||= t(), r(e, {
 				addressName: i,
 				data: o,
 				url: a
 			}), e = null;
-		}, window.addEventListener("popstate", t);
+		}, window.addEventListener("popstate", n);
 	}
-	function o(t = 1) {
-		return e = n().timeout(1500, "expire"), window.history.back(t), e.onComplete((t) => {
+	function o(n = 1) {
+		return e = t().timeout(1500, "expire"), window.history.back(n), e.onComplete((t) => {
 			t === "expire" && (e = null);
 		}), e.promise;
 	}
-	function s(t = 1) {
-		return e = n().timeout(1500, "expire"), window.history.go(t), e.onComplete((t) => {
+	function s(n = 1) {
+		return e = t().timeout(1500, "expire"), window.history.go(n), e.onComplete((t) => {
 			t === "expire" && (e = null);
 		}), e.promise;
 	}
 	function c() {
-		t && window.removeEventListener("popstate", t);
+		n && window.removeEventListener("popstate", n);
 	}
 	return {
 		write: r,
@@ -44,7 +302,7 @@ function r() {
 }
 //#endregion
 //#region src/methods/_historyActions.js
-function i(e, t) {
+function _(e, t) {
 	return function(n, { addressName: r, data: i, url: a }) {
 		let { eBus: o, API: s } = e, c = t.lastLocation;
 		s.navigate(r, i, !0), c === a ? o.emit("_RELOAD", r, i, a) : o.emit("_CHANGE", r, i, a), n.done(r, i);
@@ -52,7 +310,7 @@ function i(e, t) {
 }
 //#endregion
 //#region src/methods/_locationChange.js
-function a(e, t) {
+function v(e, t) {
 	return function() {
 		let { eBus: n, history: r, API: i } = e, a = !1, o = !0, s = !1, c = sessionStorage.getItem(t.SSName), l = r.read();
 		if (c && c === l && (a = !0), o = t.rt.every(({ name: e, pattern: o, title: c, redirect: u, data: d = {} }) => {
@@ -79,7 +337,7 @@ function a(e, t) {
 }
 //#endregion
 //#region src/methods/_setAddressRecord.js
-function o(e, t) {
+function y(e, t) {
 	return function({ name: n, path: r, title: i, inHistory: a, redirect: o, data: s }) {
 		if (n == null || r == null) return null;
 		i ??= t.appName, a ??= !1;
@@ -97,7 +355,7 @@ function o(e, t) {
 }
 //#endregion
 //#region src/methods/createURL.js
-function s(e, t) {
+function b(e, t) {
 	return function(e, n = {}) {
 		let { routes: r } = t;
 		if (!r[e]) return console.error(`Address "${e}" is not registered`), null;
@@ -111,7 +369,7 @@ function s(e, t) {
 }
 //#endregion
 //#region src/methods/getCurrentAddress.js
-function c(e, t) {
+function x(e, t) {
 	return function() {
 		let { lastAddress: e, lastLocation: n, routes: r } = t, { pattern: i } = e ? r[e] : { pattern: "null" }, a = i.match(n);
 		return [t.lastAddress, a];
@@ -119,7 +377,7 @@ function c(e, t) {
 }
 //#endregion
 //#region src/methods/destroy.js
-function l(e, t) {
+function S(e, t) {
 	return function() {
 		let { eBus: n, history: r, dead: i } = e;
 		t.isActive = !1, n.off(), r.destroy(), sessionStorage.removeItem(t.SSName), e.API = {
@@ -131,14 +389,14 @@ function l(e, t) {
 }
 //#endregion
 //#region src/methods/listActiveAddresses.js
-function u(e, t) {
+function C(e, t) {
 	return function() {
 		return t.rt.map((e) => e.name);
 	};
 }
 //#endregion
 //#region src/methods/listActiveRoutes.js
-function d(e, t) {
+function w(e, t) {
 	return function() {
 		let { rt: e } = t;
 		return e.map((e) => `${e.name} ---> ${e.path}`);
@@ -146,7 +404,7 @@ function d(e, t) {
 }
 //#endregion
 //#region src/methods/navigate.js
-function f(e, t) {
+function T(e, t) {
 	let { history: n, eBus: r } = e;
 	return function e(i, a = {}, o = !1) {
 		if (!t.isActive) {
@@ -190,7 +448,7 @@ function f(e, t) {
 }
 //#endregion
 //#region src/methods/setAddresses.js
-function p(e, t) {
+function E(e, t) {
 	return function(n, r = []) {
 		let { _setAddressRecord: i } = e.inAPI;
 		return n.forEach((e) => {
@@ -203,7 +461,7 @@ function p(e, t) {
 }
 //#endregion
 //#region src/methods/removeAddresses.js
-function m(e, t) {
+function D(e, t) {
 	return function(n) {
 		let { rt: r } = t;
 		return t.rt = r.reduce((e, r) => {
@@ -214,7 +472,7 @@ function m(e, t) {
 }
 //#endregion
 //#region src/methods/run.js
-function h(e, t) {
+function O(e, t) {
 	return function() {
 		let { inAPI: n, history: r } = e;
 		t.isActive = !0, r.listen(n._historyActions), n._locationChange();
@@ -222,24 +480,24 @@ function h(e, t) {
 }
 //#endregion
 //#region src/methods/index.js
-var g = {
-	_historyActions: i,
-	_locationChange: a,
-	_setAddressRecord: o,
-	createURL: s,
-	getCurrentAddress: c,
-	destroy: l,
-	listAciveAddresses: u,
-	listActiveRoutes: d,
-	navigate: f,
-	removeAddresses: m,
-	run: h,
-	setAddresses: p
+var k = {
+	_historyActions: _,
+	_locationChange: v,
+	_setAddressRecord: y,
+	createURL: b,
+	getCurrentAddress: x,
+	destroy: S,
+	listAciveAddresses: C,
+	listActiveRoutes: w,
+	navigate: T,
+	removeAddresses: D,
+	run: O,
+	setAddresses: E
 };
 //#endregion
 //#region src/main.js
-function _(n) {
-	let i = e(), a = r(), { appName: o, sessionStorageKey: s } = n || {}, c = {
+function A(t) {
+	let n = e(), r = g(), { appName: i, sessionStorageKey: a } = t || {}, o = {
 		lastLocation: "",
 		lastAddress: null,
 		SSName: "_routeEmmiterLastLocation",
@@ -247,22 +505,22 @@ function _(n) {
 		rt: [],
 		routes: {},
 		isActive: !1
-	}, l = {
-		UrlPattern: t,
-		eBus: i,
-		history: a,
+	}, s = {
+		UrlPattern: h,
+		eBus: n,
+		history: r,
 		dead: () => console.error("Router was destroyed")
-	}, u = {}, d = {};
-	return o && typeof o == "string" && (c.appName = o), s && typeof s == "string" && (c.SSName = s), Object.entries(g).forEach(([e, t]) => {
-		e.startsWith("_") ? d[e] = t(l, c) : u[e] = t(l, c);
-	}), l.inAPI = d, l.API = {
-		onChange: (e) => (i.on("_CHANGE", e), l.API),
-		onError: (e) => (i.on("_ERROR", e), l.API),
-		onReload: (e) => (i.on("_RELOAD", e), l.API),
-		back: (e) => a.back(e),
-		forward: (e) => a.go(e),
-		...u
-	}, l.API;
+	}, c = {}, l = {};
+	return i && typeof i == "string" && (o.appName = i), a && typeof a == "string" && (o.SSName = a), Object.entries(k).forEach(([e, t]) => {
+		e.startsWith("_") ? l[e] = t(s, o) : c[e] = t(s, o);
+	}), s.inAPI = l, s.API = {
+		onChange: (e) => (n.on("_CHANGE", e), s.API),
+		onError: (e) => (n.on("_ERROR", e), s.API),
+		onReload: (e) => (n.on("_RELOAD", e), s.API),
+		back: (e) => r.back(e),
+		forward: (e) => r.go(e),
+		...c
+	}, s.API;
 }
 //#endregion
-export { _ as default };
+export { A as default };
