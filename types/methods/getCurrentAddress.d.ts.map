@@ -1,1 +1,1 @@
-{"version":3,"file":"getCurrentAddress.d.ts","sourceRoot":"","sources":["../../src/methods/getCurrentAddress.js"],"names":[],"mappings":";AAAA,yEAIa,KAAK,CAUhB"}
+{"version":3,"file":"getCurrentAddress.d.ts","sourceRoot":"","sources":["../../src/methods/getCurrentAddress.js"],"names":[],"mappings":"AAAA,iBAAS,iBAAiB,CAAG,YAAY,KAAA,EAAE,KAAK,KAAA,SAInC,KAAK,CAUhB;eAIa,iBAAiB"}

@@ -1,11 +1,10 @@
-export default _setAddressRecord;
 declare function _setAddressRecord(dependencies: any, state: any): ({ name, path, title, inHistory, redirect, data }: {
+    data: any;
+    inHistory: any;
     name: any;
     path: any;
-    title: any;
-    inHistory: any;
     redirect: any;
-    data: any;
+    title: any;
 }) => {
     name: any;
     path: any;
@@ -15,4 +14,5 @@ declare function _setAddressRecord(dependencies: any, state: any): ({ name, path
     redirect: any;
     data: any;
 } | null;
+export default _setAddressRecord;
 //# sourceMappingURL=_setAddressRecord.d.ts.map

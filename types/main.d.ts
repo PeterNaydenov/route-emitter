@@ -1,52 +1,48 @@
-export default routeEmitter;
-/**
- * *
- */
 export type API = {
     /**
-     * - Register a callback function for "change" signal
+     * (function):API} onChange - Register a callback function for "change" signal
      */
-    onChange: (arg0: Function) => API;
+    : Function;
     /**
-     * - Register a callback function for "refresh" signal
+     * (function):API} onReload - Register a callback function for "refresh" signal
      */
-    onReload: (arg0: Function) => API;
+    : Function;
     /**
-     * - Register a callback function for "error" signal
+     * (function):API} onError - Register a callback function for "error" signal
      */
-    onError: (arg0: Function) => API;
+    : Function;
     /**
-     * - Start the router
+     * ():API} run - Start the router
      */
-    run: () => API;
+    : Function;
     /**
-     * - Change current address
+     * (string):API} navigate - Change current address
      */
-    navigate: (arg0: string) => API;
+    : Function;
     /**
-     * - Returns the current address name and data
+     * ():string} getCurrentAddress - Returns the current address name and data
      */
-    getCurrentAddress: () => string;
+    : Function;
     /**
-     * - Set the address list
+     * (Address[]):API} setAddresses - Set the address list
      */
-    setAddresses: (arg0: Address[]) => API;
+    : Function;
     /**
-     * - Remove addresses from the list by name
+     * (string[]):API} removeAddresses - Remove addresses from the list by name
      */
-    removeAddresses: (arg0: string[]) => API;
+    : Function;
     /**
-     * - Returns a list of active addresses names
+     * ():string} listActiveAddresses - Returns a list of active addresses names
      */
-    listActiveAddresses: () => string;
+    : Function;
     /**
-     * - Returns a list of active addresses and their paths
+     * ():Object} listActiveRoutes - Returns a list of active addresses and their paths
      */
-    listActiveRoutes: () => Object;
+    : Function;
     /**
-     * - Destroy the router
+     * ():API} destroy - Destroy the router
      */
-    destroy: () => API;
+    : Function;
 };
 export type Address = {
     /**
@@ -60,15 +56,15 @@ export type Address = {
     /**
      * - A function that returns the title of the route.
      */
-    title?: Function | undefined;
+    title?: Function;
     /**
      * - Indicates if the route should be in history.
      */
-    inHistory?: boolean | undefined;
+    inHistory?: boolean;
     /**
      * - The name of the route to redirect to.
      */
-    redirect?: string | undefined;
+    redirect?: string;
 };
 /**
 
@@ -111,7 +107,8 @@ export type Address = {
  * navigation, and state management.
  */
 declare function routeEmitter(config: {
-    appName?: string | undefined;
-    sessionStorageKey?: string | undefined;
+    appName?: string;
+    sessionStorageKey?: string;
 }): API;
+export default routeEmitter;
 //# sourceMappingURL=main.d.ts.map
