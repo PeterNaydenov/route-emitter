@@ -2,6 +2,13 @@
 
 
 
+### 2.2.15 ( 2026-07-10)
+- [x] Dependency update. @peter.naydenov/notice - v. 2.4.5;
+- [x] Dependency update. @peter.naydenov/url-pattern - v. 1.0.4;
+- [x] Regular dev dependency updates;
+
+
+
 ### 2.2.14 ( 2026-05-15)
 - [x] Dependency change: Using now @peter.naydenov/url-pattern instead of url-pattern;
 
