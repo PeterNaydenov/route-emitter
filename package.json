@@ -32,7 +32,7 @@
   "dependencies": {
     "@peter.naydenov/notice": "^2.4.5",
     "@peter.naydenov/url-pattern": "^1.0.5",
-    "ask-for-promise": "^3.1.1"
+    "ask-for-promise": "^3.2.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.3",
