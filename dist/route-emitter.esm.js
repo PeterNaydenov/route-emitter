@@ -168,7 +168,7 @@ var n = {
 			index: t,
 			type: "named"
 		})),
-		options: n,
+		options: { ...n },
 		isRegex: !0,
 		keys: t
 	};
