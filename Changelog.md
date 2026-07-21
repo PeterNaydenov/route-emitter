@@ -1,6 +1,12 @@
 # Release History
 
 
+### 2.2.16 ( 2026-07-21)
+- [x] Dependency update. peter.naydenov/url-pattern - v. 1.0.6;
+- [x] Dependency update. ask-for-promise - v. 3.2.0;
+- [x] Dev dependency update. Vite - v.8.1.5;
+
+
 
 ### 2.2.15 ( 2026-07-10)
 - [x] Dependency update. @peter.naydenov/notice - v. 2.4.5;
