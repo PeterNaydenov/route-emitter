@@ -1,6 +1,12 @@
 # Release History
 
 
+
+### 2.2.17 ( 2026-07-23)
+- [x] Dependency update. @peter.naydenov/notice - v. 2.5.0;
+
+
+
 ### 2.2.16 ( 2026-07-21)
 - [x] Dependency update. peter.naydenov/url-pattern - v. 1.0.6;
 - [x] Dependency update. ask-for-promise - v. 3.2.0;
