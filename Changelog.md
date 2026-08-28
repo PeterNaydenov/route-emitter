@@ -1,6 +1,10 @@
 # Release History
 
 
+### 2.2.18 ( 2026-08-28)
+- [x] Dependency update. @peter.naydenov/url-pattern - v. 1.0.7;
+
+
 
 ### 2.2.17 ( 2026-07-23)
 - [x] Dependency update. @peter.naydenov/notice - v. 2.5.0;
