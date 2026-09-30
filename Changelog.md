@@ -1,6 +1,10 @@
 # Release History
 
 
+### 2.3.0 ( 2026-09-30)
+- [x] Feature: Added an agent-neutral route-emitter skill in `skills/`;
+
+
 ### 2.2.18 ( 2026-08-28)
 - [x] Dependency update. @peter.naydenov/url-pattern - v. 1.0.7;
 
