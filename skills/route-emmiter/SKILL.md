@@ -6,7 +6,7 @@ description: Integrate @peter.naydenov/route-emitter into browser applications. 
 # Route emitter
 
 Use the default-exported `routeEmitter()` factory for browser routing. This guide
-covers v2.2.18 and assumes browser history, document, and sessionStorage APIs.
+covers v2.3.1 and assumes browser history, document, and sessionStorage APIs.
 Keep the user's framework and rendering logic; the library manages addresses,
 URLs, titles, and signals, while the application renders views.
 
@@ -88,13 +88,13 @@ or framework routing APIs. Use the application's facilities when needed.
 ## Verify against the target version
 
 Prefer the installed version's source and observable behavior when documentation
-or generated types disagree. In v2.2.18 the public method is spelled
-`listAciveAddresses()`, not `listActiveAddresses()`, and the callback method is
-`onReload()`, not the README's `onRefresh()`.
+or generated types disagree. Before v2.3.1 the list method exists only with the
+misspelled name `listAciveAddresses()`, and the callback method is `onReload()`,
+not the old README's `onRefresh()`. From v2.3.1 use `listActiveAddresses()`.
 
 Repository links below are relative to this skill folder. They are optional for
 using this guide; if the skill is copied elsewhere, inspect the installed package
-instead. Recheck version-specific details for versions other than v2.2.18.
+instead. Recheck version-specific details for versions other than v2.3.1.
 
 - [Factory](../../src/main.js) and [method exports](../../src/methods/index.js): actual public API.
 - [Navigation](../../src/methods/navigate.js), [startup](../../src/methods/_locationChange.js),
