@@ -56,11 +56,14 @@ const locationProxy = new Proxy(dom.window.location, {
   }
 })
 
-global.window = dom.window
-global.document = dom.window.document
-global.history = dom.window.history
-global.location = locationProxy
-global.navigator = dom.window.navigator
-global.sessionStorage = dom.window.sessionStorage
+// Vitest 5 exposes some globals (document, navigator, ...) as getter-only, so define instead of assign
+const setGlobal = ( name, value ) => Object.defineProperty ( globalThis, name, { value, writable: true, configurable: true })
+
+setGlobal ( 'window', dom.window )
+setGlobal ( 'document', dom.window.document )
+setGlobal ( 'history', dom.window.history )
+setGlobal ( 'location', locationProxy )
+setGlobal ( 'navigator', dom.window.navigator )
+setGlobal ( 'sessionStorage', dom.window.sessionStorage )
 
 global.historyStack = historyStack
