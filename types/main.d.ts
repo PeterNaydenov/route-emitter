@@ -1,48 +1,76 @@
+export type AddressHandler = (addressName: string, data: Record<string, any>, url: string) => void;
+export type RouterError = {
+    /**
+     * - 404 for an unknown address or path, 400 for wrong address data
+     */
+    code: number;
+    /**
+     * - Error description
+     */
+    message: string;
+};
+export type ErrorHandler = (error: RouterError) => void;
 export type API = {
     /**
-     * (function):API} onChange - Register a callback function for "change" signal
+     * - Register a callback function for "change" signal
      */
-    : Function;
+    onChange: (fn: AddressHandler) => API;
     /**
-     * (function):API} onReload - Register a callback function for "refresh" signal
+     * - Register a callback function for "reload" signal
      */
-    : Function;
+    onReload: (fn: AddressHandler) => API;
     /**
-     * (function):API} onError - Register a callback function for "error" signal
+     * - Register a callback function for "error" signal
      */
-    : Function;
+    onError: (fn: ErrorHandler) => API;
     /**
-     * ():API} run - Start the router
+     * - Go back in history. Resolves with the address name or 'expire'
      */
-    : Function;
+    back: (steps?: number) => Promise<string>;
     /**
-     * (string):API} navigate - Change current address
+     * - Go forward in history. Resolves with the address name or 'expire'
      */
-    : Function;
+    forward: (steps?: number) => Promise<string>;
     /**
-     * ():string} getCurrentAddress - Returns the current address name and data
+     * - Start the router
      */
-    : Function;
+    run: () => void;
     /**
-     * (Address[]):API} setAddresses - Set the address list
+     * - Change current address
      */
-    : Function;
+    navigate: (addressName: string, data?: Record<string, any>) => void;
     /**
-     * (string[]):API} removeAddresses - Remove addresses from the list by name
+     * - Create URL from address name and data
      */
-    : Function;
+    createURL: (addressName: string, data?: Record<string, any>) => (string | null);
     /**
-     * ():string} listActiveAddresses - Returns a list of active addresses names
+     * - Returns the current address name and data
      */
-    : Function;
+    getCurrentAddress: () => [(string | null), (Record<string, any> | null)];
     /**
-     * ():Object} listActiveRoutes - Returns a list of active addresses and their paths
+     * - Set the address list
      */
-    : Function;
+    setAddresses: (list: Address[], cancelList?: string[]) => API;
     /**
-     * ():API} destroy - Destroy the router
+     * - Remove addresses from the list by name
      */
-    : Function;
+    removeAddresses: (removeList: string[]) => API;
+    /**
+     * - Returns a list of active addresses names
+     */
+    listActiveAddresses: () => string[];
+    /**
+     * - Deprecated. Misspelled alias of listActiveAddresses
+     */
+    listAciveAddresses: () => string[];
+    /**
+     * - Returns a list of active addresses and their paths
+     */
+    listActiveRoutes: () => string[];
+    /**
+     * - Destroy the router
+     */
+    destroy: () => void;
 };
 export type Address = {
     /**
@@ -54,9 +82,9 @@ export type Address = {
      */
     path: string;
     /**
-     * - A function that returns the title of the route.
+     * - The title of the route, or a function that returns it.
      */
-    title?: Function;
+    title?: string | ((data: Record<string, any>) => string);
     /**
      * - Indicates if the route should be in history.
      */
@@ -65,32 +93,54 @@ export type Address = {
      * - The name of the route to redirect to.
      */
     redirect?: string;
+    /**
+     * - Data used for the redirect address.
+     */
+    data?: Record<string, any>;
 };
 /**
-
+ * @callback AddressHandler
+ * @param {string} addressName - Name of the address
+ * @param {Record<string, any>} data - Data extracted from the URL
+ * @param {string} url - The URL
+ * @returns {void}
  */
-/***
- *
+/**
+ * @typedef {Object} RouterError
+ * @property {number} code - 404 for an unknown address or path, 400 for wrong address data
+ * @property {string} message - Error description
+ */
+/**
+ * @callback ErrorHandler
+ * @param {RouterError} error
+ * @returns {void}
+ */
+/**
  * @typedef {Object} API
- * @property {function(function):API} onChange - Register a callback function for "change" signal
- * @property {function(function):API} onReload - Register a callback function for "refresh" signal
- * @property {function(function):API} onError - Register a callback function for "error" signal
- * @property {function():API} run - Start the router
- * @property {function(string):API} navigate - Change current address
- * @property {function():string} getCurrentAddress - Returns the current address name and data
- * @property {function(Address[]):API} setAddresses - Set the address list
- * @property {function(string[]):API} removeAddresses - Remove addresses from the list by name
- * @property {function():string} listActiveAddresses - Returns a list of active addresses names
- * @property {function():Object} listActiveRoutes - Returns a list of active addresses and their paths
- * @property {function():API} destroy - Destroy the router
+ * @property {(fn: AddressHandler) => API} onChange - Register a callback function for "change" signal
+ * @property {(fn: AddressHandler) => API} onReload - Register a callback function for "reload" signal
+ * @property {(fn: ErrorHandler) => API} onError - Register a callback function for "error" signal
+ * @property {(steps?: number) => Promise<string>} back - Go back in history. Resolves with the address name or 'expire'
+ * @property {(steps?: number) => Promise<string>} forward - Go forward in history. Resolves with the address name or 'expire'
+ * @property {() => void} run - Start the router
+ * @property {(addressName: string, data?: Record<string, any>) => void} navigate - Change current address
+ * @property {(addressName: string, data?: Record<string, any>) => (string|null)} createURL - Create URL from address name and data
+ * @property {() => [ (string|null), (Record<string, any>|null) ]} getCurrentAddress - Returns the current address name and data
+ * @property {(list: Address[], cancelList?: string[]) => API} setAddresses - Set the address list
+ * @property {(removeList: string[]) => API} removeAddresses - Remove addresses from the list by name
+ * @property {() => string[]} listActiveAddresses - Returns a list of active addresses names
+ * @property {() => string[]} listAciveAddresses - Deprecated. Misspelled alias of listActiveAddresses
+ * @property {() => string[]} listActiveRoutes - Returns a list of active addresses and their paths
+ * @property {() => void} destroy - Destroy the router
  */
 /**
  * @typedef {Object} Address
  * @property {string} name - The name of the route.
  * @property {string} path - The path of the route.
- * @property {function} [title] - A function that returns the title of the route.
- * @property {boolean} [inHistory=true] - Indicates if the route should be in history.
+ * @property {string|((data: Record<string, any>) => string)} [title] - The title of the route, or a function that returns it.
+ * @property {boolean} [inHistory=false] - Indicates if the route should be in history.
  * @property {string} [redirect] - The name of the route to redirect to.
+ * @property {Record<string, any>} [data] - Data used for the redirect address.
  */
 /**
  * Initializes and returns a route emitter instance.
@@ -99,14 +149,13 @@ export type Address = {
  * allowing for URL pattern matching, state management, and event
  * handling for route changes, errors, and reloads.
  *
- * @param {Object} config - Configuration options for the route emitter.
+ * @param {Object} [config] - Configuration options for the route emitter.
  * @param {string} [config.appName='App Name'] - Name used as a title for addresses without a title property.
  * @param {string} [config.sessionStorageKey='_routeEmmiterLastLocation'] - Key used to store the last route in sessionStorage.
  *
- * @returns {API}
- * navigation, and state management.
+ * @returns {API} Router instance with methods for event handling, navigation, and state management.
  */
-declare function routeEmitter(config: {
+declare function routeEmitter(config?: {
     appName?: string;
     sessionStorageKey?: string;
 }): API;

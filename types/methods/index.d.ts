@@ -4,7 +4,7 @@ import _setAddressRecord from "./_setAddressRecord.js";
 import createURL from "./createURL.js";
 import getCurrentAddress from "./getCurrentAddress.js";
 import destroy from "./destroy.js";
-import listAciveAddresses from "./listActiveAddresses.js";
+import listActiveAddresses from "./listActiveAddresses.js";
 import listActiveRoutes from "./listActiveRoutes.js";
 import navigate from "./navigate.js";
 import setAddresses from "./setAddresses.js";
@@ -17,7 +17,8 @@ declare const _default: {
     createURL: typeof createURL;
     getCurrentAddress: typeof getCurrentAddress;
     destroy: typeof destroy;
-    listAciveAddresses: typeof listAciveAddresses;
+    listActiveAddresses: typeof listActiveAddresses;
+    listAciveAddresses: typeof listActiveAddresses;
     listActiveRoutes: typeof listActiveRoutes;
     navigate: typeof navigate;
     removeAddresses: typeof removeAddresses;
