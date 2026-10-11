@@ -1,6 +1,19 @@
 # Release History
 
 
+### 2.3.1 ( 2026-10-11)
+- [x] Fix: TypeScript declarations were invalid. API members had no names;
+- [x] Fix: TypeScript declarations were not reachable through package.json "exports". Added "types" conditions;
+- [x] Fix: `require` pointed to missing file `dist/route-emitter.cjs`. CommonJS build is added together with `types/main.d.cts`;
+- [x] Fix: Declared types match the runtime API. Config is optional, `back`, `forward` and `createURL` are typed, `listActiveAddresses` returns `string[]`;
+- [x] Feature: Method `listActiveAddresses` is available. Misspelled `listAciveAddresses` is deprecated but still works;
+- [x] Fix: `@peter.naydenov/url-pattern` is external in the builds instead of bundled;
+- [x] Package contains only `src`, `dist`, `types`, `skills` and docs. Removed outdated `types/src` declarations;
+- [x] Dependency update. @peter.naydenov/notice - v. 2.6.1;
+- [x] Test setup works with Vitest 5. Added type-check tests for ESM and CommonJS consumers;
+- [x] Dev dependencies update. Removed unused rollup plugins;
+
+
 ### 2.3.0 ( 2026-09-30)
 - [x] Feature: Added an agent-neutral route-emitter skill in `skills/`;
 
