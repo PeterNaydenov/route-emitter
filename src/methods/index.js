@@ -5,7 +5,7 @@ import _setAddressRecord  from "./_setAddressRecord.js"
 import createURL          from "./createURL.js"
 import getCurrentAddress  from "./getCurrentAddress.js"
 import destroy            from "./destroy.js"
-import listAciveAddresses from "./listActiveAddresses.js"
+import listActiveAddresses from "./listActiveAddresses.js"
 import listActiveRoutes   from "./listActiveRoutes.js"
 import navigate           from "./navigate.js"
 import setAddresses       from "./setAddresses.js"
@@ -23,7 +23,8 @@ export default {
                 , createURL
                 , getCurrentAddress
                 , destroy
-                , listAciveAddresses
+                , listActiveAddresses
+                , listAciveAddresses : listActiveAddresses   // Deprecated. Misspelled name kept for backward compatibility
                 , listActiveRoutes
                 , navigate
                 , removeAddresses
