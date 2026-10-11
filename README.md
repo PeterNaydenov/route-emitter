@@ -110,12 +110,14 @@ router.run ()
  , createURL           : 'Create URL from address name and data (In version 2.1.0 and above)'
 
  , onChange  : 'Register a callback function for "change" signal'
- , onRefresh : 'Register a callback function for "refresh" signal'
+ , onReload  : 'Register a callback function for "reload" signal'
  , onError   : 'Register a callback function for "error" signal'
 
  , run : 'Start the router'
+ , back    : 'Go back in history. Returns a promise'
+ , forward : 'Go forward in history. Returns a promise'
 
- , listActiveAddresses : 'Returns a list of active addresses names'
+ , listActiveAddresses : 'Returns a list of active addresses names. (Alias "listAciveAddresses" is deprecated)'
  , listActiveRoutes    : 'Returns a list of active addresses and their paths. (Mostly used for debugging)'
  , destroy             : 'Destroy the router'
 ```
@@ -124,7 +126,7 @@ router.run ()
 
 ## External Links
 - [History of changes](https://github.com/PeterNaydenov/route-emitter/blob/master/Changelog.md)
-- [Migration guide](https://github.com/PeterNaydenov/route-emitter/blob/master/Migration.guide.md)
+- [Migration guide](https://github.com/PeterNaydenov/route-emitter/blob/master/migration.guide.md)
 - [Documentation v.1.x.x](https://github.com/PeterNaydenov/route-emitter/blob/master/README_v.1.x.x.md)
 
 
