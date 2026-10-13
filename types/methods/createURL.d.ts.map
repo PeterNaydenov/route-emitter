@@ -1,1 +1,1 @@
-{"version":3,"file":"createURL.d.ts","sourceRoot":"","sources":["../../src/methods/createURL.js"],"names":[],"mappings":"AAAA,iBAAS,SAAS,CAAG,YAAY,KAAA,EAAE,KAAK,KAAA,iBAI7B,MAAM,SACN,MAAM,GAAC,MAAM,SAmBtB;eAIa,SAAS"}
+{"version":3,"file":"createURL.d.ts","sourceRoot":"","sources":["../../src/methods/createURL.js"],"names":[],"mappings":"AAAA,iBAAS,SAAS,CAAG,YAAY,KAAA,EAAE,KAAK,KAAA,iBAI7B,MAAM,SACN,MAAM,KACJ,MAAM,GAAC,IAAI,CAmBtB;eAIa,SAAS"}
