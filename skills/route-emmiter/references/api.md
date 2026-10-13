@@ -1,6 +1,6 @@
 # API reference and integration notes
 
-Verified against route-emitter v2.3.1. Public spelling and runtime behavior take
+Verified against route-emitter v2.3.2. Public spelling and runtime behavior take
 precedence over stale README entries or TypeScript declarations.
 
 ## Factory and addresses
@@ -31,10 +31,10 @@ An address requires `name` and `path`. Optional fields:
 | `run()` | Returns `undefined`; activates listening and resolves current pathname |
 | `navigate(name, data = {})` | Returns `undefined`; writes URL/title/history without change or reload signals |
 | `createURL(name, data = {})` | URL string; `null` plus console error for unknown name or missing data; works before activation |
-| `getCurrentAddress()` | `[name, parsedData]`; use only after a route resolves and while its definition still exists |
+| `getCurrentAddress()` | `[name, parsedData]`. `[null, null]` before a route resolves; data is `null` if the current address was removed. Before v2.3.2 it returned `[null, ['']]` and threw after removal |
 | `listActiveAddresses()` | Name array. Before v2.3.1 only the misspelled `listAciveAddresses()` exists; it remains as a deprecated alias |
 | `listActiveRoutes()` | String array with entries such as `'home ---> /'` |
-| `back(steps = 1)`, `forward(steps = 1)` | Promises for history traversal; see limitations below |
+| `back(steps = 1)`, `forward(steps = 1)` | Promise with the address name, or `'expire'`; see history notes below |
 | `destroy()` | Returns `undefined`; removes listeners and the configured sessionStorage entry |
 
 Only methods returning the router can be chained. Do not write
@@ -70,8 +70,9 @@ Registration is additive. Reusing a name appends another match candidate while
 replacing that name's navigation lookup; it is not a clean update. To replace a
 record, remove its name first and register the replacement. Appending changes its
 matching position, so rebuild the affected list if order matters. Neither removal
-nor registration automatically re-resolves the current pathname. Avoid removing
-the current address before navigating to a retained one.
+nor registration automatically re-resolves the current pathname. After the current
+address is removed, the next `navigate()` replaces the history record. Before
+v2.3.2 that `navigate()` call threw.
 
 ## History and lifecycle
 
@@ -81,9 +82,10 @@ the current address before navigating to a retained one.
 - History callbacks receive router-managed `event.state` fields `PGID`, `url`,
   and `data`; null or foreign state is not handled defensively. Check the host
   application's history integration when traversal fails.
-- `forward(steps)` uses `history.go(steps)`. `back(steps)` passes the argument to
-  native `history.back()`, which does not support multiple steps. Do not promise
-  multi-step backward traversal. Traversal promises time out after about 1.5 seconds.
+- `forward(steps)` uses `history.go(steps)` and `back(steps)` uses
+  `history.go(-steps)`. Before v2.3.2 `back(steps)` passed the argument to native
+  `history.back()`, which ignores it, so it always moved one step. Traversal
+  promises resolve with the address name, or with `'expire'` after about 1.5 seconds.
 - Destroy the router when its owner unmounts. Discard the old instance; do not
   assume every old method reference has been disabled. Create a fresh instance
   for a new lifecycle. Simultaneous routers share browser history and, by default,
@@ -99,7 +101,7 @@ the current address before navigating to a retained one.
 | Back button skips a page | Check `inHistory` on the address being left |
 | `404` signal | Check startup pathname and registered navigation name |
 | `400` signal | Check required parameter keys; inspect message and any title/history errors |
-| Getter throws | Ensure a route has resolved and its definition has not been removed |
+| Getter throws (before v2.3.2) | Ensure a route has resolved and its definition has not been removed |
 | Helper method is missing | Check actual exports; before v2.3.1 use `listAciveAddresses`, and use `onReload`, not `onRefresh` |
 
 When verifying an integration, exercise its startup path, a programmatic action,

@@ -6,7 +6,7 @@ description: Integrate @peter.naydenov/route-emitter into browser applications. 
 # Route emitter
 
 Use the default-exported `routeEmitter()` factory for browser routing. This guide
-covers v2.3.1 and assumes browser history, document, and sessionStorage APIs.
+covers v2.3.2 and assumes browser history, document, and sessionStorage APIs.
 Keep the user's framework and rendering logic; the library manages addresses,
 URLs, titles, and signals, while the application renders views.
 
@@ -91,15 +91,17 @@ Prefer the installed version's source and observable behavior when documentation
 or generated types disagree. Before v2.3.1 the list method exists only with the
 misspelled name `listAciveAddresses()`, and the callback method is `onReload()`,
 not the old README's `onRefresh()`. From v2.3.1 use `listActiveAddresses()`.
+Before v2.3.2 `back(steps)` always moves a single step.
 
 Repository links below are relative to this skill folder. They are optional for
 using this guide; if the skill is copied elsewhere, inspect the installed package
-instead. Recheck version-specific details for versions other than v2.3.1.
+instead. Recheck version-specific details for versions other than v2.3.2.
 
 - [Factory](../../src/main.js) and [method exports](../../src/methods/index.js): actual public API.
 - [Navigation](../../src/methods/navigate.js), [startup](../../src/methods/_locationChange.js),
   and [history](../../src/historyController.js): signals and browser behavior.
-- [README](../../README.md) and [tests](../../test/01_test.test.js): usage context.
+- [README](../../README.md) and tests ([general](../../test/01_test.test.js),
+  [history](../../test/03_history.test.js)): usage context. Types: [main.d.ts](../../types/main.d.ts).
 
 The skill uses standard YAML frontmatter and Markdown with no agent-specific tools.
 Load it through the agent's skill discovery mechanism or read `SKILL.md` directly.
