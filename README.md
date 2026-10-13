@@ -7,11 +7,11 @@
 
 
 
-Provide an list of "**application addresses**"(in brief: *'address list'*) and `route-emitter` can take control over change of the URL, page titles and browser history records.
+Provide a list of "**application addresses**"(in brief: *'address list'*) and `route-emitter` can take control over change of the URL, page titles and browser history records.
 
 
 ## What route-emitter can do?
-- Every external change of the URL will be measured against the **address list**. Router will generate one of the 3 possible signals(`change`,`refresh`,`error`) and will execute a callback function if any provided;
+- Every external change of the URL will be measured against the **address list**. Router will generate one of the 3 possible signals(`change`,`reload`,`error`) and will execute a callback function if any provided;
 - Router can change the URL by calling the method `navigate` with the `address name` and data. `route-emitter` will generate and change the URL, will change page title and will set a browser history record if needed.
 - Update your `address list` at any time. Router will start using the new list immediately;
 
@@ -38,7 +38,7 @@ const address = {
         }
 // path: string. Path to be matched;
 // name: string. Name of the address used also for event name;
-// title: string|function. Title of the page. ( optional, default value: App title);
+// title: string|function. Title of the page. Function receives the address data. ( optional, default value: config.appName );
 // inHistory: boolean. If true, will add record in the browser history. (optional, default value: false);
 
 // Address can be a redirect address. Then possible fields are:
@@ -54,7 +54,7 @@ const redirectAddress = {
 
 
 
-## Instalation
+## Installation
 Install for node.js projects by writing in your terminal:
 
 ```
@@ -71,13 +71,31 @@ const routeEmitter = require ( '@peter.naydenov/route-emitter' )
 ```
 
 
+
+## TypeScript
+Type declarations are included for both `import` and `require`. No extra `@types` package is needed.
+
+```ts
+import routeEmitter, { type API, type Address } from '@peter.naydenov/route-emitter'
+
+const addresses: Address[] = [ { name: 'home', path: '/', inHistory: true } ]
+const router: API = routeEmitter ().setAddresses ( addresses )
+
+// CommonJS: types are available on the namespace
+// import routeEmitter = require ( '@peter.naydenov/route-emitter' )
+// const router: routeEmitter.API = routeEmitter ()
+```
+
+Exported types: `API`, `Address`, `AddressHandler`, `ErrorHandler`, `RouterError`.
+
+
 ## How to use it
 
 Router has 2 configuration options:
-- appName : string. Used as page title if address don't have title. Default value: 'App title';
+- appName : string. Used as page title if address don't have title. Default value: 'App Name';
 - sessionStorageKey : string. Used to store in sessionStorage the last route. Default value: '_routeEmmiterLastLocation';
 
-Configuration if needed could be provided to routeEmmiter during initialization:     
+Configuration if needed could be provided to routeEmitter during initialization:     
 ```js
 const config = { appName: 'My App', sessionStorageKey: 'myAppLastLocation' }
 const router = routeEmitter ( config )
@@ -87,7 +105,7 @@ Before `run` the router provide at least one address - current address. On `run`
 
 ```js
 // create the router instance:
-const router = routeEmmiter ()
+const router = routeEmitter ()
 // set application title & addresses:
 router.setAddresses ( addressList )
 // listen for 'error' signal 
@@ -103,7 +121,7 @@ router.run ()
 ## Route-emitter Methods
 ```js
 // Router Methods
-   setAddresses        : 'Set the address list'
+   setAddresses        : 'Add addresses to the address list. Optional second argument: list of address names to skip'
  , removeAddresses     : 'Remove addresses from the list by name'
  , getCurrentAddress   : 'Returns the current address name and data'
  , navigate            : 'Change current address. Will not generate "change" signal'
@@ -114,8 +132,8 @@ router.run ()
  , onError   : 'Register a callback function for "error" signal'
 
  , run : 'Start the router'
- , back    : 'Go back in history. Returns a promise'
- , forward : 'Go forward in history. Returns a promise'
+ , back    : 'Go back in history. Optional argument: steps (default 1). Returns a promise with the address name or "expire"'
+ , forward : 'Go forward in history. Optional argument: steps (default 1). Returns a promise with the address name or "expire"'
 
  , listActiveAddresses : 'Returns a list of active addresses names. (Alias "listAciveAddresses" is deprecated)'
  , listActiveRoutes    : 'Returns a list of active addresses and their paths. (Mostly used for debugging)'
@@ -137,6 +155,6 @@ router.run ()
 
 
 ## License
-'@peter.naydenov/router-emitter' is released under the MIT License.
+'@peter.naydenov/route-emitter' is released under the MIT License.
 
 
