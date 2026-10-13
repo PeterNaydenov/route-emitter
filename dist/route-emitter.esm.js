@@ -21,7 +21,7 @@ function r() {
 		}, window.addEventListener("popstate", t);
 	}
 	function o(t = 1) {
-		return e = n().timeout(1500, "expire"), window.history.back(t), e.onComplete((t) => {
+		return e = n().timeout(1500, "expire"), window.history.go(-t), e.onComplete((t) => {
 			t === "expire" && (e = null);
 		}), e.promise;
 	}
@@ -113,8 +113,8 @@ function s(e, t) {
 //#region src/methods/getCurrentAddress.js
 function c(e, t) {
 	return function() {
-		let { lastAddress: e, lastLocation: n, routes: r } = t, { pattern: i } = e ? r[e] : { pattern: "null" }, a = i.match(n);
-		return [t.lastAddress, a];
+		let { lastAddress: e, lastLocation: n, routes: r } = t, i = e ? r[e] : null;
+		return i ? [e, i.pattern.match(n)] : [e, null];
 	};
 }
 //#endregion
@@ -166,7 +166,7 @@ function f(e, t) {
 			e(p, m);
 			return;
 		}
-		s && (u = l[s].inHistory);
+		l[s] && (u = l[s].inHistory);
 		try {
 			let e = d.stringify(a);
 			if (e === c) return;
