@@ -1,7 +1,7 @@
 {
   "name": "@peter.naydenov/route-emitter",
   "description": "Changes in URL are converted in events according routes definition list",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "license": "MIT",
   "author": "Peter Naydenov",
   "main": "src/main.js",
@@ -20,7 +20,19 @@
       "default": "./src/main.js"
     },
     "./package.json": "./package.json",
+    "./dist/route-emitter.esm.js": {
+      "types": "./types/main.d.ts",
+      "default": "./dist/route-emitter.esm.js"
+    },
+    "./dist/route-emitter.cjs": {
+      "types": "./types/main.d.cts",
+      "default": "./dist/route-emitter.cjs"
+    },
     "./dist/*": "./dist/*",
+    "./src/*.js": {
+      "types": "./types/*.d.ts",
+      "default": "./src/*.js"
+    },
     "./src/*": "./src/*",
     "./types/*": "./types/*",
     "./skills/*": "./skills/*"
@@ -36,7 +48,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "postbuild": "tsc -p tsconfig.json",
+    "postbuild": "tsc -p tsconfig.json && node scripts/cts-types.js",
     "preview": "vite preview",
     "test": "vitest run && npm run test:types",
     "cover": "vitest run --coverage",
@@ -47,15 +59,12 @@
     "url": "https://github.com/PeterNaydenov/route-emitter.git"
   },
   "dependencies": {
-    "@peter.naydenov/notice": "^2.6.1",
+    "@peter.naydenov/notice": "^2.6.2",
     "@peter.naydenov/url-pattern": "^1.0.7",
     "ask-for-promise": "^3.2.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.1.2",
     "@vitest/browser": "^5.0.4",
     "@vitest/browser-playwright": "^5.0.4",
     "@vitest/coverage-v8": "^5.0.4",
