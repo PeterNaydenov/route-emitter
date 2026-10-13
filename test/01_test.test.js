@@ -92,12 +92,6 @@ describe ( 'routeEmitter: General', () => {
 
 
 
-  it.skip ( 'Back', async () => {
-        // Skipped - requires complex browser history mocking
-    })
-
-
-
   it ( 'Redirect on initial loading', () => {
         const addressRedirect = [
           { name: 'home', path: '/index.html', redirect: 'about', data: { name: 'John' } },
@@ -126,12 +120,6 @@ describe ( 'routeEmitter: General', () => {
         router.navigate('home')
         router.destroy()
     }) // it Redirect during navigate
-
-
-
-  it.skip ( 'Back and going forward', async () => {
-        // Skipped - requires complex browser history mocking
-    }) // it Back and going forward
 
 
 
@@ -250,6 +238,40 @@ describe ( 'routeEmitter: General', () => {
           router.navigate('home')
           router.destroy()
     })
+
+
+
+  it ( 'Current address before run', () => {
+          const router = routeEmitter().setAddresses(addressList)
+          expect(router.getCurrentAddress()).toEqual([null, null])
+          router.destroy()
+    }) // it Current address before run
+
+
+
+  it ( 'Current address after its removal', () => {
+          const router = routeEmitter().setAddresses(addressList)
+          router.run()
+          router.navigate('about', { name: 'John' })
+          router.removeAddresses(['about'])
+          expect(router.getCurrentAddress()).toEqual(['about', null])
+          router.destroy()
+    }) // it Current address after its removal
+
+
+
+  it ( 'Navigate after removal of the current address', () => {
+          const router = routeEmitter().setAddresses(addressList)
+          router.run()
+          router.navigate('about', { name: 'John' })
+          router.removeAddresses(['about'])
+          const historyLength = history.length
+          router.navigate('home')
+          expect(window.location.pathname).toBe('/index.html')
+          expect(router.getCurrentAddress()[0]).toBe('home')
+          expect(history.length).toBe(historyLength)   // Removed address is not in history, so the record is replaced
+          router.destroy()
+    }) // it Navigate after removal of the current address
 
 
 

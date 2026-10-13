@@ -26,19 +26,18 @@ dom.window.history.replaceState = (state, title, url) => {
   dom.window.history._replaceState(state, title, url)
 }
 
-dom.window.history.back = () => {
-  if (historyIndex > 0) {
-    historyIndex--
-    currentPath = historyStack[historyIndex].path
-  }
+// Traversal is asynchronous and fires 'popstate' like in a browser. Out of range steps do nothing.
+dom.window.history.go = (delta = 0) => {
+  const target = historyIndex + delta
+  if (delta === 0 || target < 0 || target >= historyStack.length) return
+  historyIndex = target
+  currentPath = historyStack[historyIndex].path
+  const { state } = historyStack[historyIndex]
+  setTimeout(() => dom.window.dispatchEvent(new dom.window.PopStateEvent('popstate', { state })), 0)
 }
 
-dom.window.history.forward = () => {
-  if (historyIndex < historyStack.length - 1) {
-    historyIndex++
-    currentPath = historyStack[historyIndex].path
-  }
-}
+dom.window.history.back    = () => dom.window.history.go(-1)
+dom.window.history.forward = () => dom.window.history.go(1)
 
 const locationProxy = new Proxy(dom.window.location, {
   get(target, prop) {
