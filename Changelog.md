@@ -1,6 +1,21 @@
 # Release History
 
 
+
+### 2.3.2 ( 2026-10-13)
+- [x] Dependency update. ask-for-promise - v. 3.2.1;
+- [x] Dependency update. @peter.naydenov/notice - v. 2.6.2;
+- [x] Fix: `back(steps)` moved only one step. Native `history.back()` ignores arguments, so `history.go(-steps)` is used;
+- [x] Fix: CommonJS types (`types/main.d.cts`) work with TypeScript older than 5.3. The file is self-contained and generated from `types/main.d.ts` on build;
+- [x] Fix: Deep imports `dist/route-emitter.esm.js`, `dist/route-emitter.cjs` and `src/*.js` have types;
+- [x] Fix: `getCurrentAddress` returns `[null, null]` before an address is loaded instead of `[null, ['']]`. It returns null data instead of throwing when the current address was removed;
+- [x] Fix: `navigate` threw after the current address was removed. The removed address is treated as not in history;
+- [x] Removed unused React dev dependencies;
+- [x] Tests for `back` and `forward` are enabled. Type tests check that ESM and CommonJS declarations match;
+- [x] Documentation: README has a TypeScript section. Fixed signal name `reload`, default title 'App Name' and the `routeEmmiter` typo in the example. Skill updated for v2.3.2;
+
+
+
 ### 2.3.1 ( 2026-10-11)
 - [x] Fix: TypeScript declarations were invalid. API members had no names;
 - [x] Fix: TypeScript declarations were not reachable through package.json "exports". Added "types" conditions;
