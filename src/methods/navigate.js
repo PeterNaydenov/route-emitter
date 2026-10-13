@@ -30,7 +30,7 @@ return function navigate ( addressName, data={}, historyEvent=false ) {
                 navigate ( redirect, redirectData )
                 return
         }
-    if ( lastAddress )   oldHistoryFlag = routes[ lastAddress ].inHistory
+    if ( routes[ lastAddress ] )   oldHistoryFlag = routes[ lastAddress ].inHistory   // Removed address is treated as not in history
     try {
                 const url = pattern.stringify ( data );
                 if ( url === lastLocation )   return   // If same path, do nothing

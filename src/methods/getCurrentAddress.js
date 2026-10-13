@@ -2,16 +2,16 @@ function getCurrentAddress ( dependencies, state ) {
 /**
  * @function getCurrentAddress
  * @description Returns the name of the current address and the parsed data
- * @returns {array} [ addressName, data ]
- * 
- */        
+ * @returns {array} [ addressName, data ]. Data is null if no address is loaded yet or the address was removed.
+ *
+ */
 return function getCurrentAddress () {
-        const 
+        const
                 { lastAddress, lastLocation, routes } = state
-                , { pattern } = lastAddress ? routes[lastAddress] : { pattern: 'null' }
+                , record = lastAddress ? routes[lastAddress] : null
                 ;
-        let data = pattern.match ( lastLocation )
-        return [ state.lastAddress, data ]
+        if ( !record )   return [ lastAddress, null ]
+        return [ lastAddress, record.pattern.match ( lastLocation ) ]
 }} // getCurrentAddress func.
 
 

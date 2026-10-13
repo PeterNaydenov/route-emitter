@@ -39,8 +39,8 @@ function historyController ( ) {
 
 
     function back ( steps=1 ) {
-                    wait = askForPromise ().timeout ( 1500, 'expire' )   // history.back is asynch operation. It's applied when event 'popstate' is fired
-                    window.history.back ( steps )
+                    wait = askForPromise ().timeout ( 1500, 'expire' )   // history.go is asynch operation. It's applied when event 'popstate' is fired
+                    window.history.go ( -steps )   // history.back() ignores arguments, so multi-step back needs history.go
                     wait.onComplete ( d => { if ( d === 'expire')   wait = null }) // prevent unclosed promises
                     return wait.promise            
         } // back func.

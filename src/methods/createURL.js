@@ -3,7 +3,8 @@ function createURL ( dependencies, state ) {
  * @function createURL
  * @description Creates URL from address name and data
  * @param {string} addressName - Name of the address
- * @param {object|string} data - Data to be used for creating URL(optional)
+ * @param {object} [data={}] - Data to be used for creating URL
+ * @returns {string|null} URL or null if address is unknown or data is incorrect
  */
 return function createURL ( addressName, data={} ) {
         const { routes } = state;

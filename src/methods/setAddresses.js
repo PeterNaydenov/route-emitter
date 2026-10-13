@@ -4,8 +4,8 @@ function setAddresses ( dependencies, state ) {
  * @function setAddresses
  * @description Registers list of addresses
  * @param {array} list - List of addresses
- * @param {array} cancelList - List of addresses to cancel
- * @returns {Promise} 
+ * @param {string[]} [cancelList=[]] - Names of addresses to skip
+ * @returns {object} Router API (chainable)
  *   
  */
 return function setAddresses ( list, cancelList=[] ) {
